@@ -25,7 +25,7 @@
     if (!res.ok) {
       let msg = text; try { msg = JSON.parse(text).message || text; } catch (e) {}
       const err = new Error(msg);
-      err.code = /invalid_argument/.test(msg) ? "invalid_argument" : /duplicate key/.test(msg) ? "already_exists" : "network_" + res.status;
+      err.code = /game_full/.test(msg) ? "game_full" : /invalid_argument/.test(msg) ? "invalid_argument" : /duplicate key/.test(msg) ? "already_exists" : "network_" + res.status;
       throw err;
     }
     return text ? JSON.parse(text) : null;
@@ -90,5 +90,6 @@
     };
   }
 
-  window.RW_STORE = { db: { doc: docRef, collection: p => colRef(p) }, uid };
+  async function join(gid, name) { await rpc("rw_join", { p_gid: gid, p_uid: uid, p_name: name }); refreshAll(); }
+  window.RW_STORE = { db: { doc: docRef, collection: p => colRef(p) }, uid, join };
 })();
