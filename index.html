@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="College football trivia head-to-head. Seven rounds, play on your own time, settle it with a friend.">
+<meta property="og:title" content="Rivalry Week">
+<meta property="og:description" content="You've been challenged to seven rounds of college football trivia.">
+<title>Rivalry Week</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Graduate&family=Archivo:wght@400;500;600;700;800&family=Big+Shoulders+Display:wght@600;800&display=swap">
+<style>
+/* Layout: one narrow column like a phone held in the stands; a scoreboard bar on top, one play card at a time below. Night-game palette, single dark look by design. */
+:root {
+  color-scheme: dark;
+  --night: #0d1310;
+  --turf: #15201a;
+  --turf-2: #1c2a22;
+  --chalk: #ece6d3;
+  --chalk-dim: #a9a593;
+  --line: #2c3b32;
+  --bulb: #ffc94a;
+  --home: #ff6b4a;
+  --away: #5fb3ff;
+  --good: #59d18a;
+  --bad: #ff5c6c;
+  --display: "Graduate", "Rockwell", Georgia, serif;
+  --body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --digits: "Big Shoulders Display", "Archivo Narrow", Impact, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; margin: 0; }
+body {
+  background:
+    repeating-linear-gradient(180deg, transparent 0 79px, rgba(236,230,211,0.035) 79px 81px),
+    var(--night);
+  color: var(--chalk);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+.wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; letter-spacing: 0.01em; }
+p { margin: 0; }
+button, input { font: inherit; color: inherit; }
+a { color: var(--bulb); }
+:focus-visible { outline: 3px solid var(--bulb); outline-offset: 2px; }
+
+.masthead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.masthead h1 { font-size: 30px; line-height: 1; color: var(--chalk); cursor: pointer; }
+.masthead h1 span { color: var(--bulb); }
+.eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--chalk-dim); font-weight: 600; }
+
+/* Scoreboard */
+.board {
+  background: #050806;
+  border: 2px solid #26332b;
+  border-radius: 6px;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  box-shadow: inset 0 0 0 4px #0b100d;
+}
+.board .side { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.board .side.right { align-items: flex-end; text-align: right; }
+.board .name { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.board .home .name { color: var(--home); }
+.board .away .name { color: var(--away); }
+.board .pts { font-family: var(--digits); font-weight: 800; font-size: 52px; line-height: 0.9; color: var(--bulb); text-shadow: 0 0 14px rgba(255,201,74,0.45); font-variant-numeric: tabular-nums; }
+.board .pts.dim { color: #4a4330; text-shadow: none; }
+.board .mid { text-align: center; display: flex; flex-direction: column; gap: 2px; }
+.board .qtr { font-family: var(--digits); font-weight: 600; font-size: 13px; letter-spacing: 0.16em; color: var(--chalk-dim); text-transform: uppercase; }
+.board .qnum { font-family: var(--digits); font-weight: 800; font-size: 22px; color: var(--chalk); }
+
+/* Down markers: round progress */
+.drive { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.drive i { height: 6px; border-radius: 1px; background: var(--line); }
+.drive i.done { background: var(--chalk-dim); }
+.drive i.now { background: var(--bulb); }
+
+.card {
+  background: var(--turf);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.card.flat { background: transparent; border-style: dashed; }
+.type-tag { display: inline-flex; align-self: flex-start; gap: 8px; align-items: center; font-size: 12px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--night); background: var(--chalk); padding: 4px 9px; border-radius: 3px; }
+.prompt { font-size: 22px; font-weight: 700; line-height: 1.25; text-wrap: balance; }
+.sub { color: var(--chalk-dim); font-size: 14px; }
+.stat-line { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: baseline; padding: 12px 14px; border-radius: 8px; background: var(--turf-2); }
+.stat-line .who { font-weight: 700; }
+.stat-line .det { color: var(--chalk-dim); font-size: 13px; grid-column: 1; }
+.stat-line .val { font-family: var(--digits); font-weight: 800; font-size: 34px; color: var(--bulb); grid-row: 1 / span 2; grid-column: 2; font-variant-numeric: tabular-nums; }
+.stat-line.mystery .val { color: var(--chalk-dim); }
+
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choices.stack { grid-template-columns: 1fr; }
+.btn {
+  appearance: none; border: 2px solid var(--chalk); background: transparent; color: var(--chalk);
+  border-radius: 8px; padding: 14px 16px; font-weight: 800; font-size: 16px; letter-spacing: 0.04em;
+  cursor: pointer; text-align: center; transition: background .12s, color .12s, transform .08s;
+}
+.btn:hover { background: rgba(236,230,211,0.08); }
+.btn:active { transform: translateY(1px); }
+.btn.primary { background: var(--bulb); border-color: var(--bulb); color: #1a1406; }
+.btn.primary:hover { background: #ffd56e; }
+.btn.left { text-align: left; font-weight: 600; letter-spacing: 0; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn.right-ans { border-color: var(--good); background: rgba(89,209,138,0.14); }
+.btn.wrong-ans { border-color: var(--bad); background: rgba(255,92,108,0.12); }
+.btn.big { font-family: var(--display); font-weight: 400; font-size: 20px; letter-spacing: 0.02em; padding: 18px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--chalk-dim); }
+.input {
+  width: 100%; background: var(--night); border: 2px solid var(--line); border-radius: 8px;
+  padding: 13px 14px; font-size: 18px; font-weight: 600;
+}
+.input:focus { border-color: var(--bulb); outline: none; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.row > .input { flex: 1 1 180px; min-width: 0; }
+
+.verdict { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-size: 24px; }
+.verdict.good { color: var(--good); }
+.verdict.bad { color: var(--bad); }
+.verdict.wait { color: var(--bulb); }
+.note { color: var(--chalk); background: var(--turf-2); border-left: 3px solid var(--bulb); padding: 10px 12px; border-radius: 0 6px 6px 0; font-size: 15px; }
+
+.clues { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; counter-reset: clue; }
+.clues li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; padding: 10px 12px; background: var(--turf-2); border-radius: 8px; font-weight: 600; counter-increment: clue; }
+.clues li::before { content: counter(clue); font-family: var(--digits); font-weight: 800; font-size: 22px; line-height: 1; color: var(--bulb); }
+.clues li .k { display: block; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--chalk-dim); font-weight: 700; }
+.misses { display: flex; flex-wrap: wrap; gap: 6px; }
+.misses span { font-size: 13px; padding: 3px 8px; border-radius: 99px; background: rgba(255,92,108,0.14); color: #ffb3bb; text-decoration: line-through; }
+
+.cat-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.cat-card { appearance: none; cursor: pointer; border: 2px solid var(--line); background: var(--turf-2); color: var(--chalk); border-radius: 10px; padding: 22px 12px; display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
+.cat-card:hover { border-color: var(--bulb); }
+.cat-card .cat { font-family: var(--display); font-size: 20px; }
+.cat-card .hint { font-size: 12px; color: var(--chalk-dim); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; }
+
+.list { display: flex; flex-direction: column; gap: 8px; }
+.game-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--turf); cursor: pointer; text-align: left; color: var(--chalk); width: 100%; }
+.game-row:hover { border-color: var(--chalk-dim); }
+.game-row .vs { font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.game-row .st { font-size: 13px; color: var(--chalk-dim); grid-column: 1; }
+.game-row .pill { grid-row: 1 / span 2; grid-column: 2; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 9px; border-radius: 4px; background: var(--line); color: var(--chalk); white-space: nowrap; }
+.game-row .pill.go { background: var(--bulb); color: #1a1406; }
+.game-row .pill.won { background: var(--good); color: #062012; }
+.game-row .pill.lost { background: #3a2a2d; color: #ffb3bb; }
+
+.format { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.format li { display: grid; grid-template-columns: 34px 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.format .n { font-family: var(--digits); font-weight: 800; font-size: 22px; color: var(--bulb); line-height: 1.1; }
+.format .t { font-weight: 700; }
+.format .d { color: var(--chalk-dim); font-size: 14px; }
+
+.share { display: flex; gap: 8px; flex-wrap: wrap; }
+.share .input { flex: 1 1 220px; min-width: 0; font-size: 14px; font-weight: 500; }
+
+.tally { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tally th, .tally td { padding: 9px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.tally th { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--chalk-dim); font-weight: 700; }
+.tally td.p { font-family: var(--digits); font-weight: 800; font-size: 20px; text-align: center; width: 54px; }
+.tally th.p { text-align: center; }
+.tally .home-c { color: var(--home); }
+.tally .away-c { color: var(--away); }
+.tally .ans { color: var(--chalk-dim); font-size: 12px; display: block; }
+.tbl-wrap { overflow-x: auto; }
+
+.banner { padding: 12px 14px; border-radius: 8px; background: rgba(255,201,74,0.1); border: 1px solid rgba(255,201,74,0.35); font-size: 15px; }
+.err { padding: 12px 14px; border-radius: 8px; background: rgba(255,92,108,0.1); border: 1px solid rgba(255,92,108,0.4); font-size: 15px; }
+.center { text-align: center; }
+.muted { color: var(--chalk-dim); }
+.spacer { height: 4px; }
+.pick-grid { display: grid; gap: 10px; }
+.pick-btn { appearance: none; cursor: pointer; text-align: left; border: 2px solid var(--line); background: var(--turf-2); color: var(--chalk); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 4px; }
+.pick-btn:hover { border-color: var(--bulb); }
+.pick-btn .pn { font-weight: 800; font-size: 18px; }
+.pick-btn .pd { color: var(--chalk-dim); font-size: 13px; }
+
+@media (max-width: 420px) {
+  .prompt { font-size: 20px; }
+  .board .pts { font-size: 44px; }
+  .cat-cards { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="masthead">
+    <h1 id="homeLink" title="Home">Rivalry <span>Week</span></h1>
+    <span class="eyebrow">College football · head to head</span>
+  </header>
+  <main id="app" class="wrap" aria-live="polite">
+    <div class="card flat"><p class="muted">Loading the stadium lights…</p></div>
+  </main>
+</div>
+
+<datalist id="teamList"></datalist>
+<datalist id="playerList"></datalist>
+
+<script src="store.js"></script>
+<script>
+// ---------- constants ----------
+const ARTIFACT_URL = location.origin + location.pathname;
+const TEAMS = ["Air Force","Akron","Alabama","Appalachian State","Arizona","Arizona State","Arkansas","Army","Auburn","Baylor","Boise State","Boston College","BYU","California","Cincinnati","Clemson","Colorado","Colorado State","Duke","East Carolina","Florida","Florida State","Fresno State","Georgia","Georgia Tech","Hawaii","Houston","Illinois","Indiana","Iowa","Iowa State","Kansas","Kansas State","Kentucky","Louisville","LSU","Marshall","Maryland","Memphis","Miami","Michigan","Michigan State","Minnesota","Mississippi State","Missouri","Navy","Nebraska","NC State","North Carolina","Northwestern","Notre Dame","Ohio State","Oklahoma","Oklahoma State","Ole Miss","Oregon","Oregon State","Penn State","Pittsburgh","Purdue","Rutgers","SMU","South Carolina","Stanford","Syracuse","TCU","Tennessee","Texas","Texas A&M","Texas Tech","Tulane","UCF","UCLA","USC","Utah","Vanderbilt","Virginia","Virginia Tech","Wake Forest","Washington","Washington State","West Virginia","Wisconsin"];
+const ROUNDS = [
+  { key: "r1", label: "Higher or Lower", desc: "Same question for both. Both can score." },
+  { key: "r2", label: "Over/Under", desc: "Same question for both. Both can score." },
+  { key: "r3", label: "Real or Fake", desc: "Same question for both. Both can score." },
+  { key: "r4", label: "Closest Number", desc: "Only the closer guess scores." },
+  { key: "r5", label: "What Year Am I", desc: "One guess per clue. Fewer clues wins. Tie, no point." },
+  { key: "r6", label: "Choose", desc: "Pick one of two categories and answer it." },
+  { key: "r7", label: "Fill in the Blank", desc: "The answer is always a college football team." },
+];
+
+// ---------- helpers ----------
+const $app = document.getElementById("app");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = n => Number(n).toLocaleString("en-US");
+const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+  .replace(/&/g, " and ").replace(/['’.]/g, "").replace(/[^a-z0-9 ]+/g, " ")
+  .replace(/\b(the|university of|univ of|university)\b/g, " ").replace(/\s+/g, " ").trim();
+function hashStr(s) { let h = 1779033703 ^ s.length; for (let i = 0; i < s.length; i++) { h = Math.imul(h ^ s.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); } return h >>> 0; }
+function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function shuffle(arr, r) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const newId = () => Array.from(crypto.getRandomValues(new Uint8Array(8)), b => "abcdefghjkmnpqrstuvwxyz23456789"[b % 31]).join("");
+
+// ---------- state ----------
+let BANK = null, db = null, user = null, uid = null, canWrite = null;
+let route = { name: "home" };
+let unsubs = [];
+let game = null, plays = {}, myGames = [], loaded = { game: false, plays: false, list: false };
+let ui = { reveal: null, busy: false, error: "" };
+let timeoutTimer = null, stale = false;
+
+// ---------- question selection (deterministic per game) ----------
+function questionsFor(gid) {
+  const r = rng(hashStr(gid));
+  const pick = arr => arr[Math.floor(r() * arr.length)];
+  const q = {
+    r1: pick(BANK.higherLower), r2: pick(BANK.overUnder), r3: pick(BANK.realFake),
+    r4: pick(BANK.closest), r5: pick(BANK.whatYear), r6: pick(BANK.choose), r7: pick(BANK.fillBlank),
+  };
+  q.pool = shuffle(BANK.players, rng(hashStr(gid + ":ot")));
+  return q;
+}
+function otOptions(Q, round, isCreator) {
+  const pool = Q.pool, n = pool.length, base = ((round - 1) * 6) % n, off = isCreator ? 0 : 3;
+  return [0, 1, 2].map(i => pool[(base + off + i) % n]);
+}
+
+// ---------- scoring ----------
+function correctOf(r, Q, a) {
+  if (!a) return null;
+  switch (r) {
+    case "r1": return a.choice === (Q.r1.compare.value > Q.r1.anchor.value ? "higher" : "lower");
+    case "r2": return a.choice === (Q.r2.answer > Q.r2.line ? "over" : "under");
+    case "r3": return a.choice === Q.r3.real;
+    case "r6": return a.pick != null && a.choice === Q.r6[a.pick].answer;
+    case "r7": return !!a.correct;
+  }
+  return null;
+}
+function isDone(r, a) { if (!a) return false; if (r === "r5") return !!a.done; return a.choice !== undefined || a.guess !== undefined || a.text !== undefined; }
+function finished(p) { return !!p && ROUNDS.every(R => isDone(R.key, p.answers?.[R.key])); }
+function nextRound(p) { return ROUNDS.findIndex(R => !isDone(R.key, p?.answers?.[R.key])); }
+
+// returns {me, them} points (0/1) or null when it depends on a missing opponent answer
+function roundPoints(r, Q, mine, theirs) {
+  const am = mine?.answers?.[r], at = theirs?.answers?.[r];
+  if (["r1", "r2", "r3", "r6", "r7"].includes(r)) {
+    return { me: isDone(r, am) ? (correctOf(r, Q, am) ? 1 : 0) : null, them: isDone(r, at) ? (correctOf(r, Q, at) ? 1 : 0) : null };
+  }
+  if (!isDone(r, am) || !isDone(r, at)) return { me: null, them: null };
+  if (r === "r4") {
+    const dm = Math.abs(am.guess - Q.r4.answer), dt = Math.abs(at.guess - Q.r4.answer);
+    return dm === dt ? { me: 0, them: 0 } : { me: dm < dt ? 1 : 0, them: dt < dm ? 1 : 0 };
+  }
+  if (r === "r5") {
+    const cm = am.clues ?? Infinity, ct = at.clues ?? Infinity;
+    if (cm === ct) return { me: 0, them: 0 };
+    return { me: cm < ct ? 1 : 0, them: ct < cm ? 1 : 0 };
+  }
+}
+function totals(Q, mine, theirs) {
+  let me = 0, them = 0;
+  for (const R of ROUNDS) { const p = roundPoints(R.key, Q, mine, theirs); me += p.me || 0; them += p.them || 0; }
+  return { me, them };
+}
+// Overtime: returns {round, winner: uid|null, state per round}
+function overtime(Q, a, b) {
+  // a = creator play, b = joiner play
+  let round = 1;
+  while (round < 50) {
+    const ra = a?.ot?.[round], rb = b?.ot?.[round];
+    const da = ra?.result?.done, dbb = rb?.result?.done;
+    if (!(da && dbb)) return { round, winner: null };
+    const ca = ra.result.clues ?? Infinity, cb = rb.result.clues ?? Infinity;
+    if (ca !== cb) return { round, winner: ca < cb ? "a" : "b", ca, cb };
+    round++;
+  }
+  return { round, winner: null };
+}
+
+// ---------- game-level status ----------
+function statusFor(g, ps) {
+  const Q = questionsFor(g.id);
+  const me = ps[uid], oppId = (g.players || []).find(p => p !== uid), opp = oppId ? ps[oppId] : null;
+  const oppName = oppId ? (g.names?.[oppId] || "Opponent") : null;
+  if (!finished(me)) return { label: me ? "Your turn" : "Your turn", go: true, oppName, detail: `Round ${Math.max(1, nextRound(me) + 1)} of 7` };
+  if (!oppId) return { label: "Waiting", oppName: null, detail: "Nobody has joined yet. Send the link." };
+  if (!finished(opp)) return { label: "Waiting", oppName, detail: `${oppName} hasn't finished yet` };
+  const t = totals(Q, me, opp);
+  if (t.me !== t.them) return { label: t.me > t.them ? "Won" : "Lost", won: t.me > t.them, lost: t.me < t.them, oppName, detail: `Final: ${t.me}–${t.them}` };
+  const creator = g.players[0], iAmA = creator === uid;
+  const ot = overtime(Q, iAmA ? me : opp, iAmA ? opp : me);
+  if (ot.winner) { const iWon = (ot.winner === "a") === iAmA; return { label: iWon ? "Won" : "Lost", won: iWon, lost: !iWon, oppName, detail: `Decided in overtime after a ${t.me}–${t.them} tie` }; }
+  const mineOT = me.ot?.[ot.round], theirsOT = opp.ot?.[ot.round];
+  const myMove = !mineOT?.sent || (theirsOT?.sent && !mineOT?.result?.done);
+  return { label: myMove ? "OT: your move" : "OT: waiting", go: myMove, oppName, detail: `Tied ${t.me}–${t.them}. Overtime round ${ot.round}.` };
+}
+
+// ---------- routing ----------
+function parseHash() {
+  const h = location.hash.replace(/^#/, "");
+  if (h.startsWith("g-") && h.length > 2) return { name: "game", id: h.slice(2) };
+  return { name: "home" };
+}
+function go(hash) { if (location.hash === "#" + hash) onRoute(); else location.hash = hash; }
+window.addEventListener("hashchange", onRoute);
+document.getElementById("homeLink").addEventListener("click", () => { history.replaceState(null, "", location.pathname + location.search); onRoute(); });
+
+function clearSubs() { unsubs.forEach(u => { try { u(); } catch (e) {} }); unsubs = []; clearTimeout(timeoutTimer); stale = false; }
+function startTimeout() { clearTimeout(timeoutTimer); timeoutTimer = setTimeout(() => { stale = true; render(); }, 10000); }
+
+function onRoute() {
+  route = parseHash();
+  clearSubs();
+  ui = { reveal: null, busy: false, error: "" };
+  game = null; plays = {}; loaded = { game: false, plays: false, list: false };
+  if (!db || !uid) { render(); return; }
+  startTimeout();
+  if (route.name === "game") {
+    const gref = db.doc("games/" + route.id);
+    unsubs.push(gref.onSnapshot(s => {
+      if (!s.metadata.fromCache) clearTimeout(timeoutTimer), stale = false;
+      game = s.exists ? { id: s.id, ...s.data() } : null; loaded.game = true; render();
+    }, e => { ui.error = "Couldn't load this game (" + e.code + ")."; loaded.game = true; render(); }));
+    unsubs.push(gref.collection("plays").onSnapshot(qs => {
+      plays = {}; qs.docs.forEach(d => plays[d.id] = d.data()); loaded.plays = true; render();
+    }, e => { loaded.plays = true; render(); }));
+  } else {
+    unsubs.push(db.collection("games").where("players", "array-contains", uid).onSnapshot(qs => {
+      if (!qs.metadata.fromCache) clearTimeout(timeoutTimer), stale = false;
+      myGames = qs.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      loaded.list = true; render();
+      // fetch plays for each listed game once per snapshot
+      myGames.forEach(g => db.doc("games/" + g.id).collection("plays").get().then(ps => {
+        g._plays = {}; ps.docs.forEach(d => g._plays[d.id] = d.data()); render();
+      }).catch(() => {}));
+    }, e => { ui.error = "Couldn't load your games (" + e.code + ")."; loaded.list = true; render(); }));
+  }
+  render();
+}
+
+// ---------- writes ----------
+async function guarded(fn) {
+  if (ui.busy) return; ui.busy = true; ui.error = ""; render();
+  try { await fn(); }
+  catch (e) {
+    const code = e?.code || "error";
+    ui.error = code.startsWith("network") || e instanceof TypeError
+      ? "Couldn't reach the game server. Check your connection and try again."
+      : "That didn't save (" + code + "). Try again.";
+  }
+  ui.busy = false; render();
+}
+const myName = () => { try { return localStorage.getItem("rw-name") || ""; } catch (e) { return ""; } };
+const saveName = n => { try { localStorage.setItem("rw-name", n); } catch (e) {} };
+
+async function createGame(name, opponent) {
+  const id = newId();
+  const players = opponent ? [uid, opponent.id] : [uid];
+  const names = { [uid]: name }; if (opponent) names[opponent.id] = opponent.name;
+  await db.doc("games/" + id).set({ createdAt: Date.now(), players, names, v: 1 });
+  await db.doc(`games/${id}/plays/${uid}`).set({ answers: {}, startedAt: Date.now() });
+  go("g-" + id);
+}
+async function joinGame(name) {
+  await db.doc("games/" + game.id).update({ players: [game.players[0], uid], names: { [uid]: name } });
+  await db.doc(`games/${game.id}/plays/${uid}`).set({ answers: {}, startedAt: Date.now() });
+}
+async function saveAnswer(r, data) {
+  const ref = db.doc(`games/${game.id}/plays/${uid}`);
+  if (!plays[uid]) await ref.set({ answers: { [r]: data }, startedAt: Date.now() });
+  else await ref.update({ answers: { [r]: data } });
+}
+async function saveOT(round, data) {
+  const ref = db.doc(`games/${game.id}/plays/${uid}`);
+  await ref.update({ ot: { [round]: data } });
+}
+
+// ---------- rendering ----------
+function render() {
+  if (!BANK) return;
+  if (!db || !uid) return renderNoStore();
+  if (route.name === "game") return renderGame();
+  return renderHome();
+}
+
+function renderNoStore() {
+  $app.innerHTML = `
+    <section class="card">
+      <span class="type-tag">Can't save games</span>
+      <h2>Two fans. Seven rounds. One winner.</h2>
+      <p class="sub">This browser is blocking storage, so Rivalry Week can't remember who you are. Turn off private browsing or allow site data, then reload.</p>
+    </section>
+    ${formatList()}`;
+}
+
+function formatList() {
+  return `<section class="card">
+    <span class="eyebrow">The format</span>
+    <ol class="format">${ROUNDS.map((R, i) => `<li><span class="n">${i + 1}</span><span><span class="t">${R.label}</span><br><span class="d">${R.desc}</span></span></li>`).join("")}
+      <li><span class="n">OT</span><span><span class="t">Who Am I draft</span><br><span class="d">If it's tied, each of you picks 1 of 3 players for the other to guess. Clues: school, position, year, NFL team, accolades. Fewer clues wins.</span></span></li>
+    </ol>
+  </section>`;
+}
+
+function renderHome() {
+  const name = myName();
+  const rows = myGames.map(g => {
+    const st = g._plays ? statusFor(g, g._plays) : null;
+    const opp = (g.players || []).find(p => p !== uid);
+    const oppName = opp ? (g.names?.[opp] || "Opponent") : "Open invite";
+    const pillCls = st?.go ? "go" : st?.won ? "won" : st?.lost ? "lost" : "";
+    return `<button class="game-row" data-open="${esc(g.id)}">
+      <span class="vs">vs. ${esc(oppName)}</span>
+      <span class="st">${esc(st ? st.detail : "Loading…")}</span>
+      <span class="pill ${pillCls}">${esc(st ? st.label : "…")}</span>
+    </button>`;
+  }).join("");
+  $app.innerHTML = `
+    <section class="card">
+      <span class="type-tag">Kickoff</span>
+      <h2 style="font-size:28px">Start a game, send the link, settle it.</h2>
+      <p class="sub">Seven rounds of college football trivia against a friend. Each of you plays whenever you're free.</p>
+      <div class="field">
+        <label for="nameIn">Your name on the scoreboard</label>
+        <input class="input" id="nameIn" maxlength="20" autocomplete="nickname" placeholder="e.g. Jacob" value="${esc(name)}">
+      </div>
+      <button class="btn primary big" id="createBtn" ${ui.busy ? "disabled" : ""}>Start a new game</button>
+      ${ui.error ? `<div class="err">${esc(ui.error)}</div>` : ""}
+    </section>
+    <section class="list" aria-label="Your games">
+      <span class="eyebrow">Your games</span>
+      ${!loaded.list ? `<p class="muted">${stale ? "Can't reach saved games right now. They'll appear when the connection comes back." : "Loading your games…"}</p>`
+        : rows || `<div class="card flat"><p class="muted">No games yet. Start one above, then text the link to a friend.</p></div>`}
+    </section>
+    ${formatList()}`;
+  const nameIn = document.getElementById("nameIn");
+  document.getElementById("createBtn").onclick = () => {
+    const n = nameIn.value.trim(); if (!n) { nameIn.focus(); ui.error = "Add a name for the scoreboard first."; render(); return; }
+    saveName(n); guarded(() => createGame(n));
+  };
+  $app.querySelectorAll("[data-open]").forEach(b => b.onclick = () => go("g-" + b.dataset.open));
+}
+
+function shareUrl(id) { return (ARTIFACT_URL || "(link available once published)") + "#g-" + id; }
+
+function scoreboard(Q, mine, opp, roundIdx, label) {
+  const oppId = game.players.find(p => p !== uid);
+  const showOpp = finished(mine) && finished(opp);
+  const t = totals(Q, mine, showOpp ? opp : null);
+  return `<div class="board" role="group" aria-label="Scoreboard">
+    <div class="side home"><span class="name">${esc(game.names?.[uid] || "You")}</span><span class="pts">${t.me}</span></div>
+    <div class="mid"><span class="qtr">${esc(label)}</span><span class="qnum">${roundIdx >= 0 ? `${roundIdx + 1}/7` : label === "Overtime" ? "OT" : "FINAL"}</span></div>
+    <div class="side away right"><span class="name">${esc(oppId ? (game.names?.[oppId] || "Opponent") : "Open seat")}</span><span class="pts ${showOpp ? "" : "dim"}">${showOpp ? t.them : "–"}</span></div>
+  </div>`;
+}
+function drive(idx) { return `<div class="drive" aria-hidden="true">${ROUNDS.map((_, i) => `<i class="${i < idx ? "done" : i === idx ? "now" : ""}"></i>`).join("")}</div>`; }
+
+function renderGame() {
+  if (!loaded.game || !loaded.plays) {
+    $app.innerHTML = `<div class="card flat"><p class="muted">${stale ? "Can't reach this game right now. It will load when the connection comes back." : "Loading game…"}</p></div>`;
+    return;
+  }
+  if (!game) {
+    $app.innerHTML = `<div class="card"><h2>Game not found</h2><p class="sub">This link doesn't match a saved game. Check that you copied the whole link.</p><button class="btn" id="homeBtn">Back to your games</button></div>`;
+    document.getElementById("homeBtn").onclick = () => go("");
+    return;
+  }
+  const players = game.players || [];
+  const amIn = players.includes(uid);
+  if (!amIn) {
+    if (players.length >= 2) {
+      $app.innerHTML = `<div class="card"><h2>This game is full</h2><p class="sub">${esc(Object.values(game.names || {}).join(" vs. "))} are already playing it.</p><button class="btn" id="homeBtn">Start your own game</button></div>`;
+      document.getElementById("homeBtn").onclick = () => go("");
+      return;
+    }
+    const host = game.names?.[players[0]] || "A friend";
+    $app.innerHTML = `
+      <section class="card">
+        <span class="type-tag">You've been challenged</span>
+        <h2 style="font-size:28px">${esc(host)} wants to play.</h2>
+        <p class="sub">Seven rounds of college football trivia. Play your rounds whenever you like; the scores compare when you both finish.</p>
+        <div class="field"><label for="nameIn">Your name on the scoreboard</label>
+          <input class="input" id="nameIn" maxlength="20" autocomplete="nickname" value="${esc(myName())}" placeholder="e.g. Sam"></div>
+        <button class="btn primary big" id="joinBtn" ${ui.busy ? "disabled" : ""}>Accept and play</button>
+        ${ui.error ? `<div class="err">${esc(ui.error)}</div>` : ""}
+      </section>${formatList()}`;
+    const nameIn = document.getElementById("nameIn");
+    document.getElementById("joinBtn").onclick = () => {
+      const n = nameIn.value.trim(); if (!n) { nameIn.focus(); ui.error = "Add a name for the scoreboard first."; render(); return; }
+      saveName(n); guarded(() => joinGame(n));
+    };
+    return;
+  }
+
+  const Q = questionsFor(game.id);
+  const mine = plays[uid] || { answers: {} };
+  const oppId = players.find(p => p !== uid);
+  const opp = oppId ? plays[oppId] : null;
+  const idx = ui.reveal ? ROUNDS.findIndex(R => R.key === ui.reveal) : nextRound(mine);
+
+  const sharePanel = players.length < 2 ? `
+    <section class="card flat">
+      <span class="eyebrow">Invite your opponent</span>
+      <p class="sub">Text this link to a friend. Anyone with it can take the open seat.</p>
+      <div class="share"><input class="input" id="shareIn" readonly value="${esc(shareUrl(game.id))}"><button class="btn" id="copyBtn">Copy link</button></div>
+    </section>` : "";
+
+  if (idx === -1) return renderResults(Q, mine, opp, oppId, sharePanel);
+
+  const R = ROUNDS[idx];
+  $app.innerHTML = `${scoreboard(Q, mine, opp, idx, R.label)}${drive(idx)}
+    <section class="card" id="roundCard"></section>
+    ${ui.error ? `<div class="err">${esc(ui.error)}</div>` : ""}
+    ${idx === 0 && !ui.reveal ? sharePanel : ""}`;
+  wireShare();
+  const card = document.getElementById("roundCard");
+  ({ r1: rHL, r2: rOU, r3: rRF, r4: rCN, r5: rWY, r6: rCH, r7: rFB })[R.key](card, Q, mine.answers?.[R.key], R);
+}
+
+function wireShare() {
+  const c = document.getElementById("copyBtn"); if (!c) return;
+  c.onclick = () => {
+    const inp = document.getElementById("shareIn");
+    navigator.clipboard?.writeText(inp.value).then(() => { c.textContent = "Copied"; }).catch(() => { inp.select(); c.textContent = "Select and copy"; });
+  };
+}
+
+function nextBtn(r) {
+  const last = r === "r7";
+  return `<button class="btn primary big" id="nextBtn">${last ? "See the final" : "Next round"}</button>`;
+}
+function wireNext() { const b = document.getElementById("nextBtn"); if (b) b.onclick = () => { ui.reveal = null; render(); window.scrollTo({ top: 0 }); }; }
+function verdict(ok, extra) { return `<div class="verdict ${ok ? "good" : "bad"}">${ok ? "Correct" : "Nope"}${extra ? `<span class="sub" style="font-family:var(--body)">${esc(extra)}</span>` : ""}</div>`; }
+function answerOnce(r, data) { ui.reveal = r; guarded(() => saveAnswer(r, data)); }
+
+// Round 1: Higher or Lower
+function rHL(card, Q, a, R) {
+  const q = Q.r1, done = isDone("r1", a), ok = done && correctOf("r1", Q, a);
+  card.innerHTML = `<span class="type-tag">Round 1 · ${R.label}</span>
+    <p class="prompt">${esc(q.stat)}: is ${esc(q.compare.name)} higher or lower?</p>
+    <div class="stat-line"><span class="who">${esc(q.anchor.name)}</span><span class="det">${esc(q.anchor.detail)}</span><span class="val">${fmt(q.anchor.value)}</span></div>
+    <div class="stat-line mystery"><span class="who">${esc(q.compare.name)}</span><span class="det">${esc(q.compare.detail)}</span><span class="val">${done ? `<span style="color:var(--bulb)">${fmt(q.compare.value)}</span>` : "?"}</span></div>
+    ${done ? `${verdict(ok)}${nextBtn("r1")}` : `<div class="choices"><button class="btn big" data-c="higher">Higher</button><button class="btn big" data-c="lower">Lower</button></div>`}`;
+  card.querySelectorAll("[data-c]").forEach(b => b.onclick = () => answerOnce("r1", { choice: b.dataset.c }));
+  wireNext();
+}
+// Round 2: Over/Under
+function rOU(card, Q, a, R) {
+  const q = Q.r2, done = isDone("r2", a), ok = done && correctOf("r2", Q, a);
+  card.innerHTML = `<span class="type-tag">Round 2 · ${R.label}</span>
+    <p class="prompt">${esc(q.prompt)}</p>
+    <div class="stat-line"><span class="who">The line</span><span class="det">Over or under?</span><span class="val">${q.line}</span></div>
+    ${done ? `${verdict(ok, "Answer: " + fmt(q.answer))}<p class="note">${esc(q.note)}</p>${nextBtn("r2")}`
+      : `<div class="choices"><button class="btn big" data-c="over">Over</button><button class="btn big" data-c="under">Under</button></div>`}`;
+  card.querySelectorAll("[data-c]").forEach(b => b.onclick = () => answerOnce("r2", { choice: b.dataset.c }));
+  wireNext();
+}
+// Round 3: Real or Fake
+function rRF(card, Q, a, R) {
+  const q = Q.r3, done = isDone("r3", a), ok = done && correctOf("r3", Q, a);
+  card.innerHTML = `<span class="type-tag">Round 3 · ${R.label}</span>
+    <p class="prompt">“${esc(q.statement)}”</p>
+    ${done ? `${verdict(ok, q.real ? "It's real." : "It's fake.")}<p class="note">${esc(q.note)}</p>${nextBtn("r3")}`
+      : `<div class="choices"><button class="btn big" data-c="1">Real</button><button class="btn big" data-c="0">Fake</button></div>`}`;
+  card.querySelectorAll("[data-c]").forEach(b => b.onclick = () => answerOnce("r3", { choice: b.dataset.c === "1" }));
+  wireNext();
+}
+// Round 4: Closest Number
+function rCN(card, Q, a, R) {
+  const q = Q.r4, done = isDone("r4", a);
+  card.innerHTML = `<span class="type-tag">Round 4 · ${R.label}</span>
+    <p class="prompt">${esc(q.prompt)}</p>
+    <p class="sub">Closest guess takes the point. If you're exactly as close as your opponent, nobody scores.</p>
+    ${done ? `<div class="stat-line"><span class="who">Answer</span><span class="det">You guessed ${fmt(a.guess)} · off by ${fmt(Math.abs(a.guess - q.answer))}</span><span class="val">${q.unit === "year" ? q.answer : fmt(q.answer)}</span></div>
+        <div class="verdict wait">Point decided when you both finish</div>${nextBtn("r4")}`
+      : `<form class="row" id="cnForm"><input class="input" id="cnIn" inputmode="numeric" autocomplete="off" placeholder="Your guess (${esc(q.unit)})" required><button class="btn primary" type="submit">Lock it in</button></form>`}`;
+  const f = document.getElementById("cnForm");
+  if (f) f.onsubmit = e => { e.preventDefault(); const v = Number(document.getElementById("cnIn").value.replace(/[^0-9.\-]/g, "")); if (!isFinite(v) || document.getElementById("cnIn").value.trim() === "") return; answerOnce("r4", { guess: v }); };
+  wireNext();
+}
+// Round 5: What Year Am I
+function rWY(card, Q, a, R) {
+  const q = Q.r5, guesses = a?.guesses || [], done = !!a?.done;
+  const shown = done ? q.clues.length : Math.min(guesses.length + 1, q.clues.length);
+  card.innerHTML = `<span class="type-tag">Round 5 · ${R.label}</span>
+    <p class="prompt">Name the season.</p>
+    <p class="sub">One guess per clue. A wrong guess reveals the next clue. Fewer clues than your opponent wins the point.</p>
+    <ol class="clues">${q.clues.slice(0, shown).map(c => `<li><span>${esc(c)}</span></li>`).join("")}</ol>
+    ${guesses.filter(g => g !== q.answer).length ? `<div class="misses">${guesses.filter(g => g !== q.answer).map(g => `<span>${g}</span>`).join("")}</div>` : ""}
+    ${done ? `${verdict(a.clues != null, a.clues != null ? `${q.answer}, on clue ${a.clues} of ${q.clues.length}` : `It was ${q.answer}`)}${nextBtn("r5")}`
+      : `<form class="row" id="wyForm"><input class="input" id="wyIn" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="Season, e.g. 2011" required><button class="btn primary" type="submit">Guess</button></form>`}`;
+  const f = document.getElementById("wyForm");
+  if (f) { document.getElementById("wyIn").focus({ preventScroll: true }); f.onsubmit = e => {
+    e.preventDefault();
+    const y = parseInt(document.getElementById("wyIn").value, 10); if (!(y > 1850 && y < 2100)) return;
+    const g = guesses.concat(y), right = y === q.answer, out = !right && g.length >= q.clues.length;
+    const data = { guesses: g, done: right || out, clues: right ? g.length : null };
+    if (data.done) ui.reveal = "r5";
+    guarded(() => saveAnswer("r5", data));
+  }; }
+  wireNext();
+}
+// Round 6: Choose
+function rCH(card, Q, a, R) {
+  const pair = Q.r6, done = isDone("r6", a);
+  const pick = a?.pick ?? ui.chPick;
+  if (pick == null) {
+    card.innerHTML = `<span class="type-tag">Round 6 · ${R.label}</span>
+      <p class="prompt">Pick your category.</p>
+      <p class="sub">Your opponent sees the same two. You only answer the one you pick.</p>
+      <div class="cat-cards">${pair.map((q, i) => `<button class="cat-card" data-p="${i}"><span class="hint">Category</span><span class="cat">${esc(q.category)}</span></button>`).join("")}</div>`;
+    card.querySelectorAll("[data-p]").forEach(b => b.onclick = () => { ui.chPick = Number(b.dataset.p); render(); });
+    return;
+  }
+  const q = pair[pick];
+  card.innerHTML = `<span class="type-tag">Round 6 · ${esc(q.category)}</span>
+    <p class="prompt">${esc(q.prompt)}</p>
+    <div class="choices stack">${q.options.map((o, i) => {
+      const cls = done ? (i === q.answer ? "right-ans" : i === a.choice ? "wrong-ans" : "") : "";
+      return `<button class="btn left ${cls}" data-c="${i}" ${done ? "disabled" : ""}>${esc(o)}</button>`;
+    }).join("")}</div>
+    ${done ? `${verdict(correctOf("r6", Q, a))}${nextBtn("r6")}` : ""}`;
+  if (!done) card.querySelectorAll("[data-c]").forEach(b => b.onclick = () => { answerOnce("r6", { pick, choice: Number(b.dataset.c) }); ui.chPick = null; });
+  wireNext();
+}
+// Round 7: Fill in the Blank
+function teamMatch(text, q) {
+  const t = norm(text); if (!t) return false;
+  return [q.answer, ...(q.aliases || [])].some(x => norm(x) === t);
+}
+function rFB(card, Q, a, R) {
+  const q = Q.r7, done = isDone("r7", a);
+  const parts = q.text.split("___");
+  card.innerHTML = `<span class="type-tag">Round 7 · ${R.label}</span>
+    <p class="prompt">${esc(parts[0])}<span style="color:var(--bulb)">${done ? esc(q.answer) : "______"}</span>${esc(parts[1] || "")}</p>
+    ${done ? `${verdict(a.correct, a.correct ? "" : `You said ${a.text || "nothing"}`)}${nextBtn("r7")}`
+      : `<form class="row" id="fbForm"><input class="input" id="fbIn" list="teamList" autocomplete="off" placeholder="Name the team" required><button class="btn primary" type="submit">Lock it in</button></form>
+         <p class="sub">One shot. Start typing and pick from the list if it helps.</p>`}`;
+  const f = document.getElementById("fbForm");
+  if (f) f.onsubmit = e => { e.preventDefault(); const v = document.getElementById("fbIn").value.trim(); if (!v) return; answerOnce("r7", { text: v, correct: teamMatch(v, q) }); };
+  wireNext();
+}
+
+// ---------- results + overtime ----------
+function describe(r, Q, a) {
+  if (!a) return "–";
+  switch (r) {
+    case "r1": return a.choice === "higher" ? "Higher" : "Lower";
+    case "r2": return a.choice === "over" ? "Over" : "Under";
+    case "r3": return a.choice ? "Real" : "Fake";
+    case "r4": return fmt(a.guess);
+    case "r5": return a.clues != null ? `Clue ${a.clues}` : "Missed";
+    case "r6": return Q.r6[a.pick]?.category + ": " + (Q.r6[a.pick]?.options[a.choice] ?? "");
+    case "r7": return a.text || "–";
+  }
+}
+function answerKey(r, Q) {
+  switch (r) {
+    case "r1": return `${Q.r1.compare.name}: ${fmt(Q.r1.compare.value)}`;
+    case "r2": return `${fmt(Q.r2.answer)} (line ${Q.r2.line})`;
+    case "r3": return Q.r3.real ? "Real" : "Fake";
+    case "r4": return Q.r4.unit === "year" ? String(Q.r4.answer) : fmt(Q.r4.answer);
+    case "r5": return String(Q.r5.answer);
+    case "r6": return "Varies by category";
+    case "r7": return Q.r7.answer;
+  }
+}
+
+function renderResults(Q, mine, opp, oppId, sharePanel) {
+  const oppName = oppId ? (game.names?.[oppId] || "Opponent") : null;
+  const both = finished(mine) && finished(opp);
+  const t = totals(Q, mine, both ? opp : null);
+  let headline, otHtml = "";
+  if (!oppId) headline = `<div class="verdict wait">You're done. Now send the link.</div><p class="sub">Your score so far counts the rounds that don't need an opponent. Closest Number and What Year Am I are decided head to head.</p>`;
+  else if (!both) headline = `<div class="verdict wait">Waiting on ${esc(oppName)}</div><p class="sub">Your rounds are locked in. The final score shows up here when ${esc(oppName)} finishes.</p>`;
+  else if (t.me !== t.them) headline = `<div class="verdict ${t.me > t.them ? "good" : "bad"}">${t.me > t.them ? "You win" : `${esc(oppName)} wins`}, ${Math.max(t.me, t.them)}–${Math.min(t.me, t.them)}</div>`;
+  else { const r = renderOT(Q, mine, opp, oppId, oppName, t); headline = r.headline; otHtml = r.html; }
+
+  const rows = ROUNDS.map(R => {
+    const p = roundPoints(R.key, Q, mine, both ? opp : null);
+    return `<tr><td>${R.label}<span class="ans">Answer: ${esc(answerKey(R.key, Q))}</span></td>
+      <td class="p home-c">${p.me ?? "–"}<span class="ans">${esc(describe(R.key, Q, mine.answers?.[R.key]))}</span></td>
+      <td class="p away-c">${both ? (p.them ?? "–") : "?"}<span class="ans">${both ? esc(describe(R.key, Q, opp.answers?.[R.key])) : ""}</span></td></tr>`;
+  }).join("");
+
+  $app.innerHTML = `${scoreboard(Q, mine, opp, -1, both && t.me === t.them ? "Overtime" : "Final")}
+    <section class="card">${headline}</section>
+    ${otHtml}
+    ${ui.error ? `<div class="err">${esc(ui.error)}</div>` : ""}
+    ${sharePanel}
+    <section class="card">
+      <span class="eyebrow">Box score</span>
+      <div class="tbl-wrap"><table class="tally"><thead><tr><th>Round</th><th class="p home-c">${esc(game.names?.[uid] || "You")}</th><th class="p away-c">${esc(oppName || "Opp")}</th></tr></thead><tbody>${rows}</tbody></table></div>
+    </section>
+    <div class="row">
+      ${oppId && both ? `<button class="btn primary" id="rematchBtn" style="flex:1 1 200px" ${ui.busy ? "disabled" : ""}>Rematch ${esc(oppName)}</button>` : ""}
+      <button class="btn" id="homeBtn" style="flex:1 1 200px">All games</button>
+    </div>`;
+  wireShare();
+  document.getElementById("homeBtn").onclick = () => go("");
+  const rm = document.getElementById("rematchBtn");
+  if (rm) rm.onclick = () => guarded(() => createGame(game.names?.[uid] || myName() || "Me", { id: oppId, name: oppName }));
+  wireOT(Q, mine, opp, oppId);
+}
+
+function renderOT(Q, mine, opp, oppId, oppName, t) {
+  const iAmA = game.players[0] === uid;
+  const ot = overtime(Q, iAmA ? mine : opp, iAmA ? opp : mine);
+  if (ot.winner) {
+    const iWon = (ot.winner === "a") === iAmA;
+    const myC = iAmA ? ot.ca : ot.cb, thC = iAmA ? ot.cb : ot.ca;
+    const d = c => c === Infinity ? "missed" : `clue ${c}`;
+    return { headline: `<div class="verdict ${iWon ? "good" : "bad"}">${iWon ? "You win in overtime" : `${esc(oppName)} wins in overtime`}</div><p class="sub">Tied ${t.me}–${t.them} after regulation. OT round ${ot.round}: you ${d(myC)}, ${esc(oppName)} ${d(thC)}.</p>`, html: "" };
+  }
+  const k = ot.round, myOT = mine.ot?.[k] || {}, thOT = opp.ot?.[k] || {};
+  const headline = `<div class="verdict wait">Tied ${t.me}–${t.them}. Overtime${k > 1 ? `, round ${k}` : ""}.</div>
+    <p class="sub">Pick a player for ${esc(oppName)} to guess, then guess the one they pick for you. Fewer clues wins.</p>`;
+  let html = "";
+  if (!myOT.sent) {
+    const opts = otOptions(Q, k, iAmA);
+    html = `<section class="card"><span class="type-tag">OT · Your pick</span>
+      <p class="prompt">Choose the player ${esc(oppName)} has to guess.</p>
+      <p class="sub">They'll see clues one at a time: school, position, year, NFL team, accolades.</p>
+      <div class="pick-grid">${opts.map(p => `<button class="pick-btn" data-send="${esc(p.id)}"><span class="pn">${esc(p.name)}</span><span class="pd">${esc(p.clues[0])} · ${esc(p.clues[1])} · ${esc(p.clues[2].replace("Final college season: ", ""))}</span></button>`).join("")}</div></section>`;
+  }
+  if (thOT.sent && !myOT.result?.done) {
+    const target = BANK.players.find(p => p.id === thOT.sent);
+    const res = myOT.result || { guesses: [] }, shown = Math.min((res.guesses || []).length + 1, 5);
+    const keys = ["School", "Position", "Year", "NFL team", "Accolades"];
+    html += `<section class="card"><span class="type-tag">OT · Who Am I</span>
+      <p class="prompt">${esc(oppName)} picked a player for you.</p>
+      <ol class="clues">${target.clues.slice(0, shown).map((c, i) => `<li><span><span class="k">${keys[i]}</span>${esc(c)}</span></li>`).join("")}</ol>
+      ${(res.guesses || []).length ? `<div class="misses">${res.guesses.map(g => `<span>${esc(g)}</span>`).join("")}</div>` : ""}
+      <form class="row" id="otForm"><input class="input" id="otIn" list="playerList" autocomplete="off" placeholder="Player name" required><button class="btn primary" type="submit">Guess</button></form></section>`;
+  } else if (myOT.sent && !thOT.sent) {
+    html += `<section class="card flat"><p class="muted">Your pick is in. Waiting for ${esc(oppName)} to choose a player for you.</p></section>`;
+  } else if (myOT.result?.done && !thOT.result?.done) {
+    const c = myOT.result.clues;
+    html += `<section class="card flat"><p>${c != null ? `You got it on clue ${c}.` : "You ran out of clues."} <span class="muted">Waiting for ${esc(oppName)} to guess theirs.</span></p></section>`;
+  }
+  return { headline, html };
+}
+
+function wireOT(Q, mine, opp, oppId) {
+  const iAmA = game.players[0] === uid;
+  const k = opp && finished(mine) && finished(opp) ? overtime(Q, iAmA ? mine : opp, iAmA ? opp : mine).round : null;
+  $app.querySelectorAll("[data-send]").forEach(b => b.onclick = () => guarded(() => saveOT(k, { sent: b.dataset.send })));
+  const f = document.getElementById("otForm");
+  if (f) f.onsubmit = e => {
+    e.preventDefault();
+    const v = document.getElementById("otIn").value.trim(); if (!v) return;
+    const target = BANK.players.find(p => p.id === opp.ot[k].sent);
+    const prev = mine.ot?.[k]?.result?.guesses || [];
+    const right = [target.name, ...(target.aliases || [])].some(x => norm(x) === norm(v));
+    const g = right ? prev : prev.concat(v);
+    const used = prev.length + 1;
+    const done = right || used >= target.clues.length;
+    guarded(() => saveOT(k, { result: { guesses: g, done, clues: right ? used : null } }));
+  };
+}
+
+// ---------- boot ----------
+async function boot() {
+  document.getElementById("teamList").innerHTML = TEAMS.map(t => `<option value="${esc(t)}">`).join("");
+  try {
+    const res = await fetch("questions.json");
+    BANK = await res.json();
+  } catch (e) {
+    $app.innerHTML = `<div class="err">The question bank didn't load. Reload the page to try again.</div>`;
+    return;
+  }
+  document.getElementById("playerList").innerHTML = BANK.players.map(p => `<option value="${esc(p.name)}">`).join("");
+  render();
+  const store = window.RW_STORE;
+  if (!store) { render(); return; }
+  db = store.db; uid = store.uid; canWrite = true;
+  onRoute();
+}
+boot();
+</script>
+</body>
+</html>

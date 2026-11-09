@@ -1,0 +1,1248 @@
+{
+ "version": 1,
+ "higherLower": [
+  {
+   "id": "hl1",
+   "stat": "Single-season rushing yards",
+   "anchor": {
+    "name": "Melvin Gordon",
+    "detail": "Wisconsin, 2014",
+    "value": 2587
+   },
+   "compare": {
+    "name": "Barry Sanders",
+    "detail": "Oklahoma State, 1988",
+    "value": 2628
+   }
+  },
+  {
+   "id": "hl2",
+   "stat": "Single-season rushing yards",
+   "anchor": {
+    "name": "Barry Sanders",
+    "detail": "Oklahoma State, 1988",
+    "value": 2628
+   },
+   "compare": {
+    "name": "Ashton Jeanty",
+    "detail": "Boise State, 2024",
+    "value": 2601
+   }
+  },
+  {
+   "id": "hl3",
+   "stat": "Single-season rushing yards",
+   "anchor": {
+    "name": "Derrick Henry",
+    "detail": "Alabama, 2015",
+    "value": 2219
+   },
+   "compare": {
+    "name": "Melvin Gordon",
+    "detail": "Wisconsin, 2014",
+    "value": 2587
+   }
+  },
+  {
+   "id": "hl4",
+   "stat": "Single-season passing TDs",
+   "anchor": {
+    "name": "Joe Burrow",
+    "detail": "LSU, 2019",
+    "value": 60
+   },
+   "compare": {
+    "name": "Bailey Zappe",
+    "detail": "Western Kentucky, 2021",
+    "value": 62
+   }
+  },
+  {
+   "id": "hl5",
+   "stat": "Single-season passing TDs",
+   "anchor": {
+    "name": "Bryce Young",
+    "detail": "Alabama, 2021",
+    "value": 47
+   },
+   "compare": {
+    "name": "Caleb Williams",
+    "detail": "USC, 2022",
+    "value": 42
+   }
+  },
+  {
+   "id": "hl6",
+   "stat": "Single-season passing TDs",
+   "anchor": {
+    "name": "Jameis Winston",
+    "detail": "Florida State, 2013",
+    "value": 40
+   },
+   "compare": {
+    "name": "Marcus Mariota",
+    "detail": "Oregon, 2014",
+    "value": 42
+   }
+  },
+  {
+   "id": "hl7",
+   "stat": "Single-season passing yards",
+   "anchor": {
+    "name": "Baker Mayfield",
+    "detail": "Oklahoma, 2017",
+    "value": 4627
+   },
+   "compare": {
+    "name": "Kyler Murray",
+    "detail": "Oklahoma, 2018",
+    "value": 4361
+   }
+  },
+  {
+   "id": "hl8",
+   "stat": "Single-season receiving yards",
+   "anchor": {
+    "name": "Travis Hunter",
+    "detail": "Colorado, 2024",
+    "value": 1258
+   },
+   "compare": {
+    "name": "DeVonta Smith",
+    "detail": "Alabama, 2020",
+    "value": 1856
+   }
+  },
+  {
+   "id": "hl9",
+   "stat": "Heisman Trophies won by the school's players",
+   "anchor": {
+    "name": "Michigan",
+    "detail": "Harmon, Howard, Woodson",
+    "value": 3
+   },
+   "compare": {
+    "name": "Alabama",
+    "detail": "Through the 2025 season",
+    "value": 4
+   }
+  },
+  {
+   "id": "hl10",
+   "stat": "Single-season receiving yards",
+   "anchor": {
+    "name": "Ja'Marr Chase",
+    "detail": "LSU, 2019",
+    "value": 1780
+   },
+   "compare": {
+    "name": "DeVonta Smith",
+    "detail": "Alabama, 2020",
+    "value": 1856
+   }
+  }
+ ],
+ "overUnder": [
+  {
+   "id": "ou1",
+   "prompt": "Heisman Trophies won by Ohio State players",
+   "line": 6.5,
+   "answer": 7,
+   "note": "Horvath, Janowicz, Cassady, Griffin (twice), George and Troy Smith."
+  },
+  {
+   "id": "ou2",
+   "prompt": "Points scored by Boston College in its 1984 Hail Mary win over Miami",
+   "line": 48.5,
+   "answer": 47,
+   "note": "Boston College won 47–45."
+  },
+  {
+   "id": "ou3",
+   "prompt": "Points per game scored by LSU's 2019 national champions",
+   "line": 49.5,
+   "answer": 48.4,
+   "note": "LSU averaged 48.4 points per game."
+  },
+  {
+   "id": "ou4",
+   "prompt": "Heisman Trophies won by Michigan players",
+   "line": 3.5,
+   "answer": 3,
+   "note": "Tom Harmon (1940), Desmond Howard (1991), Charles Woodson (1997)."
+  },
+  {
+   "id": "ou5",
+   "prompt": "Heisman Trophies won by Alabama players",
+   "line": 4.5,
+   "answer": 4,
+   "note": "Mark Ingram, Derrick Henry, DeVonta Smith, Bryce Young."
+  },
+  {
+   "id": "ou6",
+   "prompt": "Laterals on Cal's kickoff return in 'The Play' vs. Stanford (1982)",
+   "line": 4.5,
+   "answer": 5,
+   "note": "Five laterals, finishing through the Stanford band."
+  },
+  {
+   "id": "ou7",
+   "prompt": "Georgia's margin of victory over TCU in the January 2023 national title game",
+   "line": 49.5,
+   "answer": 58,
+   "note": "Georgia won 65–7."
+  },
+  {
+   "id": "ou8",
+   "prompt": "Vince Young's total yards in the January 2006 Rose Bowl vs. USC",
+   "line": 450.5,
+   "answer": 467,
+   "note": "267 passing and 200 rushing."
+  },
+  {
+   "id": "ou9",
+   "prompt": "First-place votes for Joe Burrow in the 2019 Heisman vote",
+   "line": 800.5,
+   "answer": 841,
+   "note": "A record 841 first-place votes."
+  },
+  {
+   "id": "ou10",
+   "prompt": "Points scored by Appalachian State in its 2007 upset at Michigan",
+   "line": 30.5,
+   "answer": 34,
+   "note": "Appalachian State won 34–32."
+  }
+ ],
+ "realFake": [
+  {
+   "id": "rf1",
+   "statement": "Archie Griffin is the only player to win the Heisman Trophy twice.",
+   "real": true,
+   "note": "Griffin won in 1974 and 1975 at Ohio State."
+  },
+  {
+   "id": "rf2",
+   "statement": "Tim Tebow won two Heisman Trophies at Florida.",
+   "real": false,
+   "note": "Tebow won once, in 2007."
+  },
+  {
+   "id": "rf3",
+   "statement": "Charles Woodson was the first primarily defensive player to win the Heisman.",
+   "real": true,
+   "note": "Michigan's Woodson won in 1997."
+  },
+  {
+   "id": "rf4",
+   "statement": "Appalachian State was an FCS team when it beat No. 5 Michigan in 2007.",
+   "real": true,
+   "note": "The Mountaineers were the two-time defending FCS champions."
+  },
+  {
+   "id": "rf5",
+   "statement": "J.T. Barrett was Ohio State's third-string QB who led the 2014 playoff run.",
+   "real": false,
+   "note": "It was Cardale Jones. Barrett was the injured starter."
+  },
+  {
+   "id": "rf6",
+   "statement": "The 2013 Iron Bowl ended on a missed field goal returned for a touchdown.",
+   "real": true,
+   "note": "Chris Davis's 'Kick Six' beat No. 1 Alabama."
+  },
+  {
+   "id": "rf7",
+   "statement": "Nick Saban won national championships at three different schools.",
+   "real": false,
+   "note": "His titles came at LSU (1) and Alabama (6)."
+  },
+  {
+   "id": "rf8",
+   "statement": "Joe Burrow transferred to LSU from Ohio State.",
+   "real": true,
+   "note": "He backed up J.T. Barrett in Columbus before leaving in 2018."
+  },
+  {
+   "id": "rf9",
+   "statement": "Cam Newton won the Heisman and the national title in his only season at Florida.",
+   "real": false,
+   "note": "He did it at Auburn in 2010."
+  },
+  {
+   "id": "rf10",
+   "statement": "Baker Mayfield began his college career as a walk-on at Texas Tech.",
+   "real": true,
+   "note": "He walked on at Texas Tech, then again at Oklahoma."
+  },
+  {
+   "id": "rf11",
+   "statement": "Alabama won the first College Football Playoff after the 2014 season.",
+   "real": false,
+   "note": "Ohio State won it, beating Alabama in the semifinal."
+  },
+  {
+   "id": "rf12",
+   "statement": "Johnny Manziel won the Heisman as a senior at Texas A&M.",
+   "real": false,
+   "note": "He won as a redshirt freshman in 2012."
+  }
+ ],
+ "closest": [
+  {
+   "id": "cn1",
+   "prompt": "Official capacity of Michigan Stadium",
+   "answer": 107601,
+   "unit": "seats"
+  },
+  {
+   "id": "cn2",
+   "prompt": "Year of the first college football game (Rutgers vs. Princeton)",
+   "answer": 1869,
+   "unit": "year"
+  },
+  {
+   "id": "cn3",
+   "prompt": "Ashton Jeanty's rushing yards in 2024",
+   "answer": 2601,
+   "unit": "yards"
+  },
+  {
+   "id": "cn4",
+   "prompt": "Year the first Heisman Trophy was awarded",
+   "answer": 1935,
+   "unit": "year"
+  },
+  {
+   "id": "cn5",
+   "prompt": "Joe Burrow's passing yards in 2019",
+   "answer": 5671,
+   "unit": "yards"
+  },
+  {
+   "id": "cn6",
+   "prompt": "Points Georgia scored vs. TCU in the January 2023 title game",
+   "answer": 65,
+   "unit": "points"
+  },
+  {
+   "id": "cn7",
+   "prompt": "Year Notre Dame Stadium opened",
+   "answer": 1930,
+   "unit": "year"
+  },
+  {
+   "id": "cn8",
+   "prompt": "Combined points in the January 2006 Rose Bowl (Texas vs. USC)",
+   "answer": 79,
+   "unit": "points"
+  },
+  {
+   "id": "cn9",
+   "prompt": "Oklahoma's record winning streak in the 1950s",
+   "answer": 47,
+   "unit": "games"
+  },
+  {
+   "id": "cn10",
+   "prompt": "Archie Griffin's record streak of consecutive 100-yard rushing games",
+   "answer": 31,
+   "unit": "games"
+  }
+ ],
+ "whatYear": [
+  {
+   "id": "wy1",
+   "answer": 2007,
+   "clues": [
+    "A team with two losses wins the BCS national title.",
+    "Appalachian State stuns Michigan in the Big House.",
+    "LSU beats Ohio State for the championship.",
+    "Tim Tebow becomes the first sophomore to win the Heisman."
+   ]
+  },
+  {
+   "id": "wy2",
+   "answer": 2013,
+   "clues": [
+    "The final season of the BCS era.",
+    "Auburn beats No. 1 Alabama on the Kick Six.",
+    "Florida State goes 14-0 and wins the title.",
+    "Jameis Winston wins the Heisman as a redshirt freshman."
+   ]
+  },
+  {
+   "id": "wy3",
+   "answer": 2014,
+   "clues": [
+    "The first College Football Playoff is played.",
+    "Oregon reaches the title game.",
+    "Ohio State wins it all with third-string QB Cardale Jones.",
+    "Marcus Mariota wins the Heisman."
+   ]
+  },
+  {
+   "id": "wy4",
+   "answer": 2019,
+   "clues": [
+    "Ohio State's Chase Young sets a school record with 16.5 sacks.",
+    "Clemson's 29-game win streak ends in the title game.",
+    "LSU finishes 15-0.",
+    "Joe Burrow wins the Heisman."
+   ]
+  },
+  {
+   "id": "wy5",
+   "answer": 2010,
+   "clues": [
+    "TCU finishes unbeaten after winning the Rose Bowl.",
+    "Oregon falls just short in the BCS title game.",
+    "Auburn goes 14-0.",
+    "Cam Newton wins the Heisman."
+   ]
+  },
+  {
+   "id": "wy6",
+   "answer": 2006,
+   "clues": [
+    "Boise State beats Oklahoma with a Statue of Liberty two-point conversion.",
+    "No. 1 Ohio State beats No. 2 Michigan 42–39.",
+    "Florida routs Ohio State for the BCS title.",
+    "Troy Smith wins the Heisman."
+   ]
+  },
+  {
+   "id": "wy7",
+   "answer": 2005,
+   "clues": [
+    "USC beats Notre Dame on the 'Bush Push'.",
+    "USC brings a 34-game win streak into the Rose Bowl.",
+    "Vince Young runs for 200 yards in the Rose Bowl.",
+    "Texas beats USC for the national title."
+   ]
+  },
+  {
+   "id": "wy8",
+   "answer": 2012,
+   "clues": [
+    "Notre Dame finishes the regular season 12-0.",
+    "Texas A&M upsets No. 1 Alabama in Tuscaloosa.",
+    "Alabama beats Notre Dame 42–14 for the title.",
+    "Johnny Manziel wins the Heisman as a freshman."
+   ]
+  },
+  {
+   "id": "wy9",
+   "answer": 2023,
+   "clues": [
+    "Florida State goes 13-0 but is left out of the four-team playoff.",
+    "The last four-team playoff.",
+    "Michigan finishes 15-0.",
+    "Jayden Daniels wins the Heisman."
+   ]
+  },
+  {
+   "id": "wy10",
+   "answer": 2024,
+   "clues": [
+    "The first 12-team College Football Playoff.",
+    "Boise State's Ashton Jeanty runs for over 2,600 yards.",
+    "Ohio State beats Notre Dame for the title.",
+    "Travis Hunter wins the Heisman."
+   ]
+  }
+ ],
+ "choose": [
+  [
+   {
+    "id": "ch1a",
+    "category": "Coaches",
+    "prompt": "Which coach won national titles at both LSU and Alabama?",
+    "options": [
+     "Les Miles",
+     "Nick Saban",
+     "Urban Meyer",
+     "Kirby Smart"
+    ],
+    "answer": 1
+   },
+   {
+    "id": "ch1b",
+    "category": "Traditions",
+    "prompt": "Which school's marching band famously 'dots the i'?",
+    "options": [
+     "Michigan",
+     "Penn State",
+     "Ohio State",
+     "Wisconsin"
+    ],
+    "answer": 2
+   }
+  ],
+  [
+   {
+    "id": "ch2a",
+    "category": "Rivalries",
+    "prompt": "The Iron Bowl is Alabama vs. which school?",
+    "options": [
+     "Auburn",
+     "LSU",
+     "Tennessee",
+     "Mississippi State"
+    ],
+    "answer": 0
+   },
+   {
+    "id": "ch2b",
+    "category": "Stadiums",
+    "prompt": "Which school's stadium is nicknamed 'The Swamp'?",
+    "options": [
+     "LSU",
+     "Miami",
+     "Georgia",
+     "Florida"
+    ],
+    "answer": 3
+   }
+  ],
+  [
+   {
+    "id": "ch3a",
+    "category": "Heisman",
+    "prompt": "Who won the 2018 Heisman Trophy?",
+    "options": [
+     "Tua Tagovailoa",
+     "Kyler Murray",
+     "Dwayne Haskins",
+     "Baker Mayfield"
+    ],
+    "answer": 1
+   },
+   {
+    "id": "ch3b",
+    "category": "Bowl games",
+    "prompt": "Which bowl is known as 'The Granddaddy of Them All'?",
+    "options": [
+     "Sugar Bowl",
+     "Orange Bowl",
+     "Rose Bowl",
+     "Cotton Bowl"
+    ],
+    "answer": 2
+   }
+  ],
+  [
+   {
+    "id": "ch4a",
+    "category": "Coaches",
+    "prompt": "Who coached Michigan to the 2023 national title?",
+    "options": [
+     "Jim Harbaugh",
+     "Sherrone Moore",
+     "Lloyd Carr",
+     "Brady Hoke"
+    ],
+    "answer": 0
+   },
+   {
+    "id": "ch4b",
+    "category": "Mascots",
+    "prompt": "What kind of animal is Bevo, the Texas mascot?",
+    "options": [
+     "Bison",
+     "Longhorn steer",
+     "Horse",
+     "Ram"
+    ],
+    "answer": 1
+   }
+  ],
+  [
+   {
+    "id": "ch5a",
+    "category": "Rivalries",
+    "prompt": "Which rivalry is known simply as 'The Game'?",
+    "options": [
+     "Alabama vs. Auburn",
+     "USC vs. UCLA",
+     "Texas vs. Oklahoma",
+     "Michigan vs. Ohio State"
+    ],
+    "answer": 3
+   },
+   {
+    "id": "ch5b",
+    "category": "Stadiums",
+    "prompt": "Which school plays in 'Death Valley' in Baton Rouge?",
+    "options": [
+     "Clemson",
+     "LSU",
+     "Tulane",
+     "Louisiana Tech"
+    ],
+    "answer": 1
+   }
+  ],
+  [
+   {
+    "id": "ch6a",
+    "category": "Heisman",
+    "prompt": "Which Heisman winner played quarterback at Navy?",
+    "options": [
+     "Roger Staubach",
+     "Joe Bellino",
+     "Doug Flutie",
+     "Pat Sullivan"
+    ],
+    "answer": 0
+   },
+   {
+    "id": "ch6b",
+    "category": "Bowl games",
+    "prompt": "In which city is the Sugar Bowl played?",
+    "options": [
+     "Atlanta",
+     "Miami",
+     "New Orleans",
+     "Dallas"
+    ],
+    "answer": 2
+   }
+  ],
+  [
+   {
+    "id": "ch7a",
+    "category": "NFL Draft",
+    "prompt": "Who was the No. 1 pick in the 2020 NFL Draft?",
+    "options": [
+     "Tua Tagovailoa",
+     "Chase Young",
+     "Justin Herbert",
+     "Joe Burrow"
+    ],
+    "answer": 3
+   },
+   {
+    "id": "ch7b",
+    "category": "Traditions",
+    "prompt": "Fans of which school sing 'Rocky Top'?",
+    "options": [
+     "Tennessee",
+     "Kentucky",
+     "Arkansas",
+     "West Virginia"
+    ],
+    "answer": 0
+   }
+  ],
+  [
+   {
+    "id": "ch8a",
+    "category": "Records",
+    "prompt": "Which school won an NCAA-record 47 straight games in the 1950s?",
+    "options": [
+     "Notre Dame",
+     "Army",
+     "Oklahoma",
+     "Alabama"
+    ],
+    "answer": 2
+   },
+   {
+    "id": "ch8b",
+    "category": "Coaches",
+    "prompt": "Which coach won two national titles at Florida?",
+    "options": [
+     "Steve Spurrier",
+     "Urban Meyer",
+     "Dan Mullen",
+     "Billy Napier"
+    ],
+    "answer": 1
+   }
+  ],
+  [
+   {
+    "id": "ch9a",
+    "category": "Heisman",
+    "prompt": "Who won the 2022 Heisman Trophy?",
+    "options": [
+     "C.J. Stroud",
+     "Max Duggan",
+     "Caleb Williams",
+     "Stetson Bennett"
+    ],
+    "answer": 2
+   },
+   {
+    "id": "ch9b",
+    "category": "Bowl games",
+    "prompt": "The Cotton Bowl is played in which state?",
+    "options": [
+     "Texas",
+     "Oklahoma",
+     "Louisiana",
+     "Arizona"
+    ],
+    "answer": 0
+   }
+  ],
+  [
+   {
+    "id": "ch10a",
+    "category": "Mascots",
+    "prompt": "Uga the bulldog is the mascot of which school?",
+    "options": [
+     "Mississippi State",
+     "Yale",
+     "Fresno State",
+     "Georgia"
+    ],
+    "answer": 3
+   },
+   {
+    "id": "ch10b",
+    "category": "Rivalries",
+    "prompt": "The Red River Rivalry is Texas vs. which school?",
+    "options": [
+     "Texas A&M",
+     "Oklahoma",
+     "Arkansas",
+     "Oklahoma State"
+    ],
+    "answer": 1
+   }
+  ]
+ ],
+ "fillBlank": [
+  {
+   "id": "fb1",
+   "text": "In 2007, ___ upset No. 5 Michigan 34–32 at the Big House.",
+   "answer": "Appalachian State",
+   "aliases": [
+    "app state",
+    "appalachian st"
+   ]
+  },
+  {
+   "id": "fb2",
+   "text": "The 'Kick Six' gave ___ a win over No. 1 Alabama in 2013.",
+   "answer": "Auburn",
+   "aliases": []
+  },
+  {
+   "id": "fb3",
+   "text": "Doug Flutie's 1984 Hail Mary beat Miami and made ___ famous.",
+   "answer": "Boston College",
+   "aliases": [
+    "bc"
+   ]
+  },
+  {
+   "id": "fb4",
+   "text": "___ beat Oklahoma in the 2007 Fiesta Bowl with the Statue of Liberty play.",
+   "answer": "Boise State",
+   "aliases": [
+    "boise st",
+    "boise"
+   ]
+  },
+  {
+   "id": "fb5",
+   "text": "Vince Young led ___ past USC in the January 2006 Rose Bowl.",
+   "answer": "Texas",
+   "aliases": [
+    "ut"
+   ]
+  },
+  {
+   "id": "fb6",
+   "text": "Joe Burrow started his college career at ___ before transferring to LSU.",
+   "answer": "Ohio State",
+   "aliases": [
+    "osu",
+    "tosu"
+   ]
+  },
+  {
+   "id": "fb7",
+   "text": "Baker Mayfield began his college career as a walk-on at ___.",
+   "answer": "Texas Tech",
+   "aliases": [
+    "ttu"
+   ]
+  },
+  {
+   "id": "fb8",
+   "text": "In 1982's 'The Play', ___ scored on five laterals through Stanford's band.",
+   "answer": "California",
+   "aliases": [
+    "cal",
+    "berkeley",
+    "uc berkeley"
+   ]
+  },
+  {
+   "id": "fb9",
+   "text": "Barry Sanders ran for 2,628 yards in 1988 for ___.",
+   "answer": "Oklahoma State",
+   "aliases": [
+    "okstate",
+    "ok state",
+    "oklahoma st"
+   ]
+  },
+  {
+   "id": "fb10",
+   "text": "Georgia beat ___ 65–7 for the national title in January 2023.",
+   "answer": "TCU",
+   "aliases": [
+    "texas christian"
+   ]
+  },
+  {
+   "id": "fb11",
+   "text": "Marcus Mariota won the 2014 Heisman playing for ___.",
+   "answer": "Oregon",
+   "aliases": []
+  }
+ ],
+ "players": [
+  {
+   "id": "p1",
+   "name": "Joe Burrow",
+   "aliases": [
+    "burrow"
+   ],
+   "clues": [
+    "LSU (started at Ohio State)",
+    "Quarterback",
+    "Final college season: 2019",
+    "Drafted by the Cincinnati Bengals",
+    "2019 Heisman winner, national champion, No. 1 overall pick"
+   ]
+  },
+  {
+   "id": "p2",
+   "name": "Lamar Jackson",
+   "aliases": [
+    "lamar"
+   ],
+   "clues": [
+    "Louisville",
+    "Quarterback",
+    "Final college season: 2017",
+    "Drafted by the Baltimore Ravens",
+    "2016 Heisman winner"
+   ]
+  },
+  {
+   "id": "p3",
+   "name": "Reggie Bush",
+   "aliases": [
+    "bush"
+   ],
+   "clues": [
+    "USC",
+    "Running back",
+    "Final college season: 2005",
+    "Drafted by the New Orleans Saints",
+    "2005 Heisman winner (reinstated in 2024), No. 2 overall pick"
+   ]
+  },
+  {
+   "id": "p4",
+   "name": "Tim Tebow",
+   "aliases": [
+    "tebow"
+   ],
+   "clues": [
+    "Florida",
+    "Quarterback",
+    "Final college season: 2009",
+    "Drafted by the Denver Broncos",
+    "2007 Heisman winner, two national titles"
+   ]
+  },
+  {
+   "id": "p5",
+   "name": "Cam Newton",
+   "aliases": [
+    "newton",
+    "cameron newton"
+   ],
+   "clues": [
+    "Auburn (started at Florida, then Blinn College)",
+    "Quarterback",
+    "Final college season: 2010",
+    "Drafted by the Carolina Panthers",
+    "2010 Heisman winner, national champion, No. 1 overall pick"
+   ]
+  },
+  {
+   "id": "p6",
+   "name": "Johnny Manziel",
+   "aliases": [
+    "manziel",
+    "johnny football"
+   ],
+   "clues": [
+    "Texas A&M",
+    "Quarterback",
+    "Final college season: 2013",
+    "Drafted by the Cleveland Browns",
+    "2012 Heisman winner as a freshman"
+   ]
+  },
+  {
+   "id": "p7",
+   "name": "Derrick Henry",
+   "aliases": [
+    "henry"
+   ],
+   "clues": [
+    "Alabama",
+    "Running back",
+    "Final college season: 2015",
+    "Drafted by the Tennessee Titans",
+    "2015 Heisman winner"
+   ]
+  },
+  {
+   "id": "p8",
+   "name": "Christian McCaffrey",
+   "aliases": [
+    "mccaffrey",
+    "cmc"
+   ],
+   "clues": [
+    "Stanford",
+    "Running back",
+    "Final college season: 2016",
+    "Drafted by the Carolina Panthers",
+    "2015 Heisman runner-up, single-season all-purpose yards record"
+   ]
+  },
+  {
+   "id": "p9",
+   "name": "Andrew Luck",
+   "aliases": [
+    "luck"
+   ],
+   "clues": [
+    "Stanford",
+    "Quarterback",
+    "Final college season: 2011",
+    "Drafted by the Indianapolis Colts",
+    "Two-time Heisman runner-up, No. 1 overall pick"
+   ]
+  },
+  {
+   "id": "p10",
+   "name": "Tua Tagovailoa",
+   "aliases": [
+    "tua",
+    "tagovailoa"
+   ],
+   "clues": [
+    "Alabama",
+    "Quarterback",
+    "Final college season: 2019",
+    "Drafted by the Miami Dolphins",
+    "Came off the bench to win the 2017 season's title game"
+   ]
+  },
+  {
+   "id": "p11",
+   "name": "Kyler Murray",
+   "aliases": [
+    "kyler",
+    "murray"
+   ],
+   "clues": [
+    "Oklahoma (started at Texas A&M)",
+    "Quarterback",
+    "Final college season: 2018",
+    "Drafted by the Arizona Cardinals",
+    "2018 Heisman winner, also an MLB first-round pick"
+   ]
+  },
+  {
+   "id": "p12",
+   "name": "Baker Mayfield",
+   "aliases": [
+    "baker",
+    "mayfield"
+   ],
+   "clues": [
+    "Oklahoma (started at Texas Tech)",
+    "Quarterback",
+    "Final college season: 2017",
+    "Drafted by the Cleveland Browns",
+    "2017 Heisman winner, former walk-on, No. 1 overall pick"
+   ]
+  },
+  {
+   "id": "p13",
+   "name": "Marcus Mariota",
+   "aliases": [
+    "mariota"
+   ],
+   "clues": [
+    "Oregon",
+    "Quarterback",
+    "Final college season: 2014",
+    "Drafted by the Tennessee Titans",
+    "2014 Heisman winner, No. 2 overall pick"
+   ]
+  },
+  {
+   "id": "p14",
+   "name": "Jameis Winston",
+   "aliases": [
+    "winston",
+    "jameis"
+   ],
+   "clues": [
+    "Florida State",
+    "Quarterback",
+    "Final college season: 2014",
+    "Drafted by the Tampa Bay Buccaneers",
+    "2013 Heisman winner, national champion, No. 1 overall pick"
+   ]
+  },
+  {
+   "id": "p15",
+   "name": "Ja'Marr Chase",
+   "aliases": [
+    "chase",
+    "jamarr chase"
+   ],
+   "clues": [
+    "LSU",
+    "Wide receiver",
+    "Final college season: 2019",
+    "Drafted by the Cincinnati Bengals",
+    "2019 Biletnikoff Award winner, national champion"
+   ]
+  },
+  {
+   "id": "p16",
+   "name": "DeVonta Smith",
+   "aliases": [
+    "devonta",
+    "smith"
+   ],
+   "clues": [
+    "Alabama",
+    "Wide receiver",
+    "Final college season: 2020",
+    "Drafted by the Philadelphia Eagles",
+    "2020 Heisman winner, first wide receiver to win it since 1991"
+   ]
+  },
+  {
+   "id": "p17",
+   "name": "Travis Hunter",
+   "aliases": [
+    "hunter"
+   ],
+   "clues": [
+    "Colorado (started at Jackson State)",
+    "Wide receiver and cornerback",
+    "Final college season: 2024",
+    "Drafted by the Jacksonville Jaguars",
+    "2024 Heisman winner, No. 2 overall pick"
+   ]
+  },
+  {
+   "id": "p18",
+   "name": "Ashton Jeanty",
+   "aliases": [
+    "jeanty"
+   ],
+   "clues": [
+    "Boise State",
+    "Running back",
+    "Final college season: 2024",
+    "Drafted by the Las Vegas Raiders",
+    "2024 Heisman runner-up, ran for 2,601 yards"
+   ]
+  },
+  {
+   "id": "p19",
+   "name": "Saquon Barkley",
+   "aliases": [
+    "saquon",
+    "barkley"
+   ],
+   "clues": [
+    "Penn State",
+    "Running back",
+    "Final college season: 2017",
+    "Drafted by the New York Giants",
+    "No. 2 overall pick"
+   ]
+  },
+  {
+   "id": "p20",
+   "name": "Calvin Johnson",
+   "aliases": [
+    "megatron",
+    "johnson"
+   ],
+   "clues": [
+    "Georgia Tech",
+    "Wide receiver",
+    "Final college season: 2006",
+    "Drafted by the Detroit Lions",
+    "2006 Biletnikoff Award winner, No. 2 overall pick"
+   ]
+  },
+  {
+   "id": "p21",
+   "name": "Adrian Peterson",
+   "aliases": [
+    "peterson",
+    "ap",
+    "all day"
+   ],
+   "clues": [
+    "Oklahoma",
+    "Running back",
+    "Final college season: 2006",
+    "Drafted by the Minnesota Vikings",
+    "Heisman runner-up as a true freshman in 2004"
+   ]
+  },
+  {
+   "id": "p22",
+   "name": "Vince Young",
+   "aliases": [
+    "vy",
+    "young"
+   ],
+   "clues": [
+    "Texas",
+    "Quarterback",
+    "Final college season: 2005",
+    "Drafted by the Tennessee Titans",
+    "Won the national title in the January 2006 Rose Bowl"
+   ]
+  },
+  {
+   "id": "p23",
+   "name": "Ricky Williams",
+   "aliases": [
+    "ricky",
+    "williams"
+   ],
+   "clues": [
+    "Texas",
+    "Running back",
+    "Final college season: 1998",
+    "Drafted by the New Orleans Saints",
+    "1998 Heisman winner; the Saints traded their whole draft class for him"
+   ]
+  },
+  {
+   "id": "p24",
+   "name": "Larry Fitzgerald",
+   "aliases": [
+    "fitzgerald",
+    "fitz"
+   ],
+   "clues": [
+    "Pittsburgh",
+    "Wide receiver",
+    "Final college season: 2003",
+    "Drafted by the Arizona Cardinals",
+    "2003 Heisman runner-up, No. 3 overall pick"
+   ]
+  },
+  {
+   "id": "p25",
+   "name": "Jayden Daniels",
+   "aliases": [
+    "daniels"
+   ],
+   "clues": [
+    "LSU (started at Arizona State)",
+    "Quarterback",
+    "Final college season: 2023",
+    "Drafted by the Washington Commanders",
+    "2023 Heisman winner, No. 2 overall pick"
+   ]
+  },
+  {
+   "id": "p26",
+   "name": "Caleb Williams",
+   "aliases": [
+    "caleb"
+   ],
+   "clues": [
+    "USC (started at Oklahoma)",
+    "Quarterback",
+    "Final college season: 2023",
+    "Drafted by the Chicago Bears",
+    "2022 Heisman winner, No. 1 overall pick"
+   ]
+  },
+  {
+   "id": "p27",
+   "name": "Bryce Young",
+   "aliases": [
+    "bryce"
+   ],
+   "clues": [
+    "Alabama",
+    "Quarterback",
+    "Final college season: 2022",
+    "Drafted by the Carolina Panthers",
+    "2021 Heisman winner, No. 1 overall pick"
+   ]
+  },
+  {
+   "id": "p28",
+   "name": "Mark Ingram",
+   "aliases": [
+    "ingram"
+   ],
+   "clues": [
+    "Alabama",
+    "Running back",
+    "Final college season: 2010",
+    "Drafted by the New Orleans Saints",
+    "2009 Heisman winner, Alabama's first"
+   ]
+  },
+  {
+   "id": "p29",
+   "name": "Matt Leinart",
+   "aliases": [
+    "leinart"
+   ],
+   "clues": [
+    "USC",
+    "Quarterback",
+    "Final college season: 2005",
+    "Drafted by the Arizona Cardinals",
+    "2004 Heisman winner"
+   ]
+  },
+  {
+   "id": "p30",
+   "name": "Justin Herbert",
+   "aliases": [
+    "herbert"
+   ],
+   "clues": [
+    "Oregon",
+    "Quarterback",
+    "Final college season: 2019",
+    "Drafted by the Los Angeles Chargers",
+    "2020 Rose Bowl Offensive MVP, No. 6 overall pick"
+   ]
+  }
+ ]
+}
