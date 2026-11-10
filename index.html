@@ -187,6 +187,12 @@ a { color: var(--bulb); }
 .pick-btn .pn { font-weight: 800; font-size: 18px; }
 .pick-btn .pd { color: var(--chalk-dim); font-size: 13px; }
 
+.clock { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; }
+.clock-bar { height: 8px; border-radius: 99px; background: var(--turf-2); overflow: hidden; }
+.clock-bar i { display: block; height: 100%; background: var(--bulb); border-radius: 99px; transition: width .2s linear; }
+.clock-n { font-family: var(--digits); font-weight: 800; font-size: 28px; line-height: 1; min-width: 2ch; text-align: right; color: var(--bulb); font-variant-numeric: tabular-nums; }
+.clock.hot .clock-bar i { background: var(--bad); }
+.clock.hot .clock-n { color: var(--bad); }
 .cols, .col-main, .col-side { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 .live { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--good); }
 .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--good); animation: pulse 1.6s ease-in-out infinite; }
@@ -244,7 +250,7 @@ a { color: var(--bulb); }
 <script>
 // ---------- constants ----------
 const ARTIFACT_URL = location.origin + location.pathname;
-const TEAMS = ["Air Force","Akron","Alabama","Appalachian State","Arizona","Arizona State","Arkansas","Army","Auburn","Baylor","Boise State","Boston College","BYU","California","Cincinnati","Clemson","Colorado","Colorado State","Duke","East Carolina","Florida","Florida State","Fresno State","Georgia","Georgia Tech","Hawaii","Houston","Illinois","Indiana","Iowa","Iowa State","Kansas","Kansas State","Kentucky","Louisville","LSU","Marshall","Maryland","Memphis","Miami","Michigan","Michigan State","Minnesota","Mississippi State","Missouri","Navy","Nebraska","NC State","North Carolina","Northwestern","Notre Dame","Ohio State","Oklahoma","Oklahoma State","Ole Miss","Oregon","Oregon State","Penn State","Pittsburgh","Purdue","Rutgers","SMU","South Carolina","Stanford","Syracuse","TCU","Tennessee","Texas","Texas A&M","Texas Tech","Tulane","UCF","UCLA","USC","Utah","Vanderbilt","Virginia","Virginia Tech","Wake Forest","Washington","Washington State","West Virginia","Wisconsin"];
+const TEAMS = ["Air Force", "Akron", "Alabama", "Appalachian State", "Arizona", "Arizona State", "Arkansas", "Army", "Auburn", "Baylor", "Boise State", "Boston College", "Buffalo", "BYU", "California", "Central Michigan", "Chicago", "Cincinnati", "Clemson", "Coastal Carolina", "Colorado", "Colorado State", "Delaware", "Duke", "East Carolina", "Eastern Illinois", "Eastern Washington", "Florida", "Florida State", "Fresno State", "Georgia", "Georgia Southern", "Georgia State", "Georgia Tech", "Grambling State", "Harvard", "Hawaii", "Houston", "Howard", "Illinois", "Indiana", "Iowa", "Iowa State", "Jackson State", "Jacksonville State", "James Madison", "Kansas", "Kansas State", "Kent State", "Kentucky", "Liberty", "Louisiana Tech", "Louisville", "LSU", "Marshall", "Maryland", "Memphis", "Miami", "Miami (OH)", "Michigan", "Michigan State", "Minnesota", "Mississippi State", "Mississippi Valley State", "Missouri", "Montana State", "Navy", "NC State", "Nebraska", "Nevada", "North Carolina", "North Dakota State", "North Texas", "Northern Illinois", "Northwestern", "Notre Dame", "Ohio State", "Oklahoma", "Oklahoma State", "Old Dominion", "Ole Miss", "Oregon", "Oregon State", "Penn State", "Pittsburgh", "Purdue", "Rice", "Rutgers", "SMU", "South Carolina", "South Dakota State", "Southern Miss", "Stanford", "Syracuse", "TCU", "Tennessee", "Texas", "Texas A&M", "Texas Tech", "The Citadel", "Toledo", "Troy", "Tulane", "UCF", "UCLA", "USC", "Utah", "Vanderbilt", "Virginia", "Virginia Tech", "Wake Forest", "Washington", "Washington State", "West Virginia", "Western Michigan", "Wisconsin", "Wyoming", "Yale", "Youngstown State"];
 const ROUNDS = [
   { key: "r1", label: "Higher or Lower", desc: "Same question for both. Both can score." },
   { key: "r2", label: "Over/Under", desc: "Same question for both. Both can score." },
@@ -276,14 +282,18 @@ let ui = { reveal: null, busy: false, error: "" };
 let timeoutTimer = null, stale = false;
 
 // ---------- question selection (deterministic per game) ----------
-function questionsFor(gid) {
+// Games made before the big bank (v1) only draw from the original items, so their questions never change.
+const V1_SIZES = { higherLower: 10, overUnder: 10, realFake: 12, closest: 10, whatYear: 10, choose: 10, fillBlank: 11, players: 30 };
+const BANK_V = 2;
+function questionsFor(gid, v) {
   const r = rng(hashStr(gid));
-  const pick = arr => arr[Math.floor(r() * arr.length)];
+  const part = k => (v || 1) < 2 ? BANK[k].slice(0, V1_SIZES[k]) : BANK[k];
+  const pick = k => { const arr = part(k); return arr[Math.floor(r() * arr.length)]; };
   const q = {
-    r1: pick(BANK.higherLower), r2: pick(BANK.overUnder), r3: pick(BANK.realFake),
-    r4: pick(BANK.closest), r5: pick(BANK.whatYear), r6: pick(BANK.choose), r7: pick(BANK.fillBlank),
+    r1: pick("higherLower"), r2: pick("overUnder"), r3: pick("realFake"),
+    r4: pick("closest"), r5: pick("whatYear"), r6: pick("choose"), r7: pick("fillBlank"),
   };
-  q.pool = shuffle(BANK.players, rng(hashStr(gid + ":ot")));
+  q.pool = shuffle(part("players"), rng(hashStr(gid + ":ot")));
   return q;
 }
 function otOptions(Q, round, isCreator) {
@@ -315,7 +325,8 @@ function roundPoints(r, Q, mine, theirs) {
   }
   if (!isDone(r, am) || !isDone(r, at)) return { me: null, them: null };
   if (r === "r4") {
-    const dm = Math.abs(am.guess - Q.r4.answer), dt = Math.abs(at.guess - Q.r4.answer);
+    const off = g => g == null ? Infinity : Math.abs(g - Q.r4.answer);
+    const dm = off(am.guess), dt = off(at.guess);
     return dm === dt ? { me: 0, them: 0 } : { me: dm < dt ? 1 : 0, them: dt < dm ? 1 : 0 };
   }
   if (r === "r5") {
@@ -346,7 +357,7 @@ function overtime(Q, a, b) {
 
 // ---------- game-level status ----------
 function statusFor(g, ps) {
-  const Q = questionsFor(g.id);
+  const Q = questionsFor(g.id, g.v);
   const me = ps[uid], oppId = (g.players || []).find(p => p !== uid), opp = oppId ? ps[oppId] : null;
   const oppName = oppId ? (g.names?.[oppId] || "Opponent") : null;
   if (!finished(me)) return { label: me ? "Your turn" : "Your turn", go: true, oppName, detail: `Round ${Math.max(1, nextRound(me) + 1)} of 7` };
@@ -425,7 +436,7 @@ async function createGame(name, opponent) {
   const id = newId();
   const players = opponent ? [uid, opponent.id] : [uid];
   const names = { [uid]: name }; if (opponent) names[opponent.id] = opponent.name;
-  await db.doc("games/" + id).set({ createdAt: Date.now(), players, names, v: 1 });
+  await db.doc("games/" + id).set({ createdAt: Date.now(), players, names, v: BANK_V });
   await db.doc(`games/${id}/plays/${uid}`).set({ answers: {}, startedAt: Date.now() });
   go("g-" + id);
 }
@@ -469,6 +480,7 @@ function renderNoStore() {
 function formatList() {
   return `<section class="card">
     <span class="eyebrow">The format</span>
+    <p class="sub">Every question is on a shot clock: 15 seconds for quick picks, 20 for typed answers and each clue. The clock keeps running if you leave.</p>
     <ol class="format">${ROUNDS.map((R, i) => `<li><span class="n">${i + 1}</span><span><span class="t">${R.label}</span><br><span class="d">${R.desc}</span></span></li>`).join("")}
       <li><span class="n">OT</span><span><span class="t">Who Am I draft</span><br><span class="d">If it's tied, each of you picks 1 of 3 players for the other to guess. Clues: school, position, year, NFL team, accolades. Fewer clues wins.</span></span></li>
     </ol>
@@ -564,7 +576,11 @@ function renderGame() {
     return;
   }
 
-  const Q = questionsFor(game.id);
+  if ((game.v || 1) > (BANK.version || 1)) {   // an old cached question file can't play this game
+    $app.innerHTML = `<div class="card"><h2>Update needed</h2><p class="sub">This game uses newer questions than your browser has. Reload to get them.</p><button class="btn primary" onclick="location.reload()">Reload</button></div>`;
+    return;
+  }
+  const Q = questionsFor(game.id, game.v);
   const mine = plays[uid] || { answers: {} };
   const oppId = players.find(p => p !== uid);
   const opp = oppId ? plays[oppId] : null;
@@ -627,6 +643,39 @@ function nextBtn(r) {
 }
 function wireNext() { const b = document.getElementById("nextBtn"); if (b) b.onclick = () => { ui.reveal = null; render(); window.scrollTo({ top: 0 }); }; }
 function verdict(ok, extra) { return `<div class="verdict ${ok ? "good" : "bad"}">${ok ? "Correct" : "Nope"}${extra ? `<span class="sub" style="font-family:var(--body)">${esc(extra)}</span>` : ""}</div>`; }
+// ---------- shot clock ----------
+// Each question's start time is saved to your play the first time it appears, so reloading doesn't reset it.
+const LIMITS = { r1: 15, r2: 15, r3: 15, r4: 20, r5: 20, r6: 15, r7: 20, ot: 20 };
+const localClock = {}, clockFired = new Set();
+let clockHandlers = {};
+function clockStart(key) {
+  const saved = plays[uid]?.clock?.[key];
+  if (saved) return saved;
+  const lk = game.id + ":" + key;
+  if (!localClock[lk]) {
+    localClock[lk] = Date.now();
+    db.doc(`games/${game.id}/plays/${uid}`).update({ clock: { [key]: localClock[lk] } }).catch(() => {});
+  }
+  return localClock[lk];
+}
+function clockHtml(key, secs, onExpire) {
+  clockHandlers[key] = onExpire;
+  const start = clockStart(key), left = Math.max(0, secs * 1000 - (Date.now() - start));
+  return `<div class="clock" data-key="${key}" data-end="${start + secs * 1000}" data-ms="${secs * 1000}" role="timer" aria-label="Shot clock">
+    <div class="clock-bar"><i style="width:${(left / (secs * 1000)) * 100}%"></i></div><span class="clock-n">${Math.ceil(left / 1000)}</span></div>`;
+}
+function tickClocks() {
+  document.querySelectorAll(".clock[data-key]").forEach(el => {
+    const left = Number(el.dataset.end) - Date.now(), ms = Number(el.dataset.ms), key = el.dataset.key;
+    el.querySelector(".clock-bar i").style.width = Math.max(0, left / ms * 100) + "%";
+    el.querySelector(".clock-n").textContent = Math.max(0, Math.ceil(left / 1000));
+    el.classList.toggle("hot", left <= 5000);
+    const fk = game?.id + ":" + key;
+    if (left <= 0 && !clockFired.has(fk) && !ui.busy) { clockFired.add(fk); clockHandlers[key]?.(); }
+  });
+}
+setInterval(tickClocks, 200);
+
 function answerOnce(r, data) { ui.reveal = r; guarded(() => saveAnswer(r, data)); }
 
 // Round 1: Higher or Lower
@@ -636,7 +685,7 @@ function rHL(card, Q, a, R) {
     <p class="prompt">${esc(q.stat)}: is ${esc(q.compare.name)} higher or lower?</p>
     <div class="stat-line"><span class="who">${esc(q.anchor.name)}</span><span class="det">${esc(q.anchor.detail)}</span><span class="val">${fmt(q.anchor.value)}</span></div>
     <div class="stat-line mystery"><span class="who">${esc(q.compare.name)}</span><span class="det">${esc(q.compare.detail)}</span><span class="val">${done ? `<span style="color:var(--bulb)">${fmt(q.compare.value)}</span>` : "?"}</span></div>
-    ${done ? `${verdict(ok)}${nextBtn("r1")}` : `<div class="choices"><button class="btn big" data-c="higher">Higher</button><button class="btn big" data-c="lower">Lower</button></div>`}`;
+    ${done ? `${verdict(ok, a.timeout ? "Time ran out." : "")}${nextBtn("r1")}` : `${clockHtml("r1", LIMITS.r1, () => answerOnce("r1", { choice: null, timeout: true }))}<div class="choices"><button class="btn big" data-c="higher">Higher</button><button class="btn big" data-c="lower">Lower</button></div>`}`;
   card.querySelectorAll("[data-c]").forEach(b => b.onclick = () => answerOnce("r1", { choice: b.dataset.c }));
   wireNext();
 }
@@ -646,8 +695,8 @@ function rOU(card, Q, a, R) {
   card.innerHTML = `<span class="type-tag">Round 2 · ${R.label}</span>
     <p class="prompt">${esc(q.prompt)}</p>
     <div class="stat-line"><span class="who">The line</span><span class="det">Over or under?</span><span class="val">${q.line}</span></div>
-    ${done ? `${verdict(ok, "Answer: " + fmt(q.answer))}<p class="note">${esc(q.note)}</p>${nextBtn("r2")}`
-      : `<div class="choices"><button class="btn big" data-c="over">Over</button><button class="btn big" data-c="under">Under</button></div>`}`;
+    ${done ? `${verdict(ok, (a.timeout ? "Time ran out. " : "") + "Answer: " + fmt(q.answer))}<p class="note">${esc(q.note)}</p>${nextBtn("r2")}`
+      : `${clockHtml("r2", LIMITS.r2, () => answerOnce("r2", { choice: null, timeout: true }))}<div class="choices"><button class="btn big" data-c="over">Over</button><button class="btn big" data-c="under">Under</button></div>`}`;
   card.querySelectorAll("[data-c]").forEach(b => b.onclick = () => answerOnce("r2", { choice: b.dataset.c }));
   wireNext();
 }
@@ -656,8 +705,8 @@ function rRF(card, Q, a, R) {
   const q = Q.r3, done = isDone("r3", a), ok = done && correctOf("r3", Q, a);
   card.innerHTML = `<span class="type-tag">Round 3 · ${R.label}</span>
     <p class="prompt">“${esc(q.statement)}”</p>
-    ${done ? `${verdict(ok, q.real ? "It's real." : "It's fake.")}<p class="note">${esc(q.note)}</p>${nextBtn("r3")}`
-      : `<div class="choices"><button class="btn big" data-c="1">Real</button><button class="btn big" data-c="0">Fake</button></div>`}`;
+    ${done ? `${verdict(ok, (a.timeout ? "Time ran out. " : "") + (q.real ? "It's real." : "It's fake."))}<p class="note">${esc(q.note)}</p>${nextBtn("r3")}`
+      : `${clockHtml("r3", LIMITS.r3, () => answerOnce("r3", { choice: null, timeout: true }))}<div class="choices"><button class="btn big" data-c="1">Real</button><button class="btn big" data-c="0">Fake</button></div>`}`;
   card.querySelectorAll("[data-c]").forEach(b => b.onclick = () => answerOnce("r3", { choice: b.dataset.c === "1" }));
   wireNext();
 }
@@ -667,12 +716,16 @@ function rCN(card, Q, a, R) {
   card.innerHTML = `<span class="type-tag">Round 4 · ${R.label}</span>
     <p class="prompt">${esc(q.prompt)}</p>
     <p class="sub">Closest guess takes the point. If you're exactly as close as your opponent, nobody scores.</p>
-    ${done ? `<div class="stat-line"><span class="who">Answer</span><span class="det">You guessed ${fmt(a.guess)} · off by ${fmt(Math.abs(a.guess - q.answer))}</span><span class="val">${q.unit === "year" ? q.answer : fmt(q.answer)}</span></div>
+    ${done ? `<div class="stat-line"><span class="who">Answer</span><span class="det">${a.guess == null ? "Time ran out, no guess" : `You guessed ${fmt(a.guess)} · off by ${fmt(Math.abs(a.guess - q.answer))}`}</span><span class="val">${q.unit === "year" ? q.answer : fmt(q.answer)}</span></div>
         <div class="verdict wait">Point decided when you both finish</div>${nextBtn("r4")}`
-      : `<form class="row" id="cnForm"><input class="input" id="cnIn" inputmode="numeric" autocomplete="off" placeholder="Your guess (${esc(q.unit)})" required><button class="btn primary" type="submit">Lock it in</button></form>`}`;
+      : `${clockHtml("r4", LIMITS.r4, () => { const v = cnValue(); answerOnce("r4", v == null ? { guess: null, timeout: true } : { guess: v }); })}<form class="row" id="cnForm"><input class="input" id="cnIn" inputmode="numeric" autocomplete="off" placeholder="Your guess (${esc(q.unit)})" required><button class="btn primary" type="submit">Lock it in</button></form>`}`;
   const f = document.getElementById("cnForm");
-  if (f) f.onsubmit = e => { e.preventDefault(); const v = Number(document.getElementById("cnIn").value.replace(/[^0-9.\-]/g, "")); if (!isFinite(v) || document.getElementById("cnIn").value.trim() === "") return; answerOnce("r4", { guess: v }); };
+  if (f) f.onsubmit = e => { e.preventDefault(); const v = cnValue(); if (v == null) return; answerOnce("r4", { guess: v }); };
   wireNext();
+}
+function cnValue() {
+  const el = document.getElementById("cnIn"); if (!el || el.value.trim() === "") return null;
+  const v = Number(el.value.replace(/[^0-9.\-]/g, "")); return isFinite(v) && el.value.replace(/[^0-9]/g, "") !== "" ? v : null;
 }
 // Round 5: What Year Am I
 function rWY(card, Q, a, R) {
@@ -682,19 +735,20 @@ function rWY(card, Q, a, R) {
     <p class="prompt">Name the season.</p>
     <p class="sub">One guess per clue. A wrong guess reveals the next clue. Fewer clues than your opponent wins the point.</p>
     <ol class="clues">${q.clues.slice(0, shown).map(c => `<li><span>${esc(c)}</span></li>`).join("")}</ol>
-    ${guesses.filter(g => g !== q.answer).length ? `<div class="misses">${guesses.filter(g => g !== q.answer).map(g => `<span>${g}</span>`).join("")}</div>` : ""}
+    ${guesses.filter(g => g !== q.answer).length ? `<div class="misses">${guesses.filter(g => g !== q.answer).map(g => `<span>${g == null ? "Time" : g}</span>`).join("")}</div>` : ""}
     ${done ? `${verdict(a.clues != null, a.clues != null ? `${q.answer}, on clue ${a.clues} of ${q.clues.length}` : `It was ${q.answer}`)}${nextBtn("r5")}`
-      : `<form class="row" id="wyForm"><input class="input" id="wyIn" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="Season, e.g. 2011" required><button class="btn primary" type="submit">Guess</button></form>`}`;
+      : `${clockHtml("r5c" + guesses.length, LIMITS.r5, () => wyGuess(guesses, q, true))}<form class="row" id="wyForm"><input class="input" id="wyIn" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="Season, e.g. 2011" required><button class="btn primary" type="submit">Guess</button></form>`}`;
   const f = document.getElementById("wyForm");
-  if (f) { document.getElementById("wyIn").focus({ preventScroll: true }); f.onsubmit = e => {
-    e.preventDefault();
-    const y = parseInt(document.getElementById("wyIn").value, 10); if (!(y > 1850 && y < 2100)) return;
-    const g = guesses.concat(y), right = y === q.answer, out = !right && g.length >= q.clues.length;
-    const data = { guesses: g, done: right || out, clues: right ? g.length : null };
-    if (data.done) ui.reveal = "r5";
-    guarded(() => saveAnswer("r5", data));
-  }; }
+  if (f) { document.getElementById("wyIn").focus({ preventScroll: true }); f.onsubmit = e => { e.preventDefault(); wyGuess(guesses, q, false); }; }
   wireNext();
+}
+function wyGuess(guesses, q, expired) {
+  let y = parseInt(document.getElementById("wyIn")?.value, 10);
+  if (!(y > 1850 && y < 2100)) { if (!expired) return; y = null; }   // time ran out with nothing valid typed
+  const g = guesses.concat(y), right = y === q.answer, out = !right && g.length >= q.clues.length;
+  const data = { guesses: g, done: right || out, clues: right ? g.length : null };
+  if (data.done) ui.reveal = "r5";
+  guarded(() => saveAnswer("r5", data));
 }
 // Round 6: Choose
 function rCH(card, Q, a, R) {
@@ -705,7 +759,7 @@ function rCH(card, Q, a, R) {
       <p class="prompt">Pick your category.</p>
       <p class="sub">Your opponent sees the same two. You only answer the one you pick.</p>
       <div class="cat-cards">${pair.map((q, i) => `<button class="cat-card" data-p="${i}"><span class="hint">Category</span><span class="cat">${esc(q.category)}</span></button>`).join("")}</div>`;
-    card.querySelectorAll("[data-p]").forEach(b => b.onclick = () => { ui.chPick = Number(b.dataset.p); render(); });
+    card.querySelectorAll("[data-p]").forEach(b => b.onclick = () => { ui.chPick = Number(b.dataset.p); render(); guarded(() => saveAnswer("r6", { pick: Number(b.dataset.p) })); });
     return;
   }
   const q = pair[pick];
@@ -715,7 +769,8 @@ function rCH(card, Q, a, R) {
       const cls = done ? (i === q.answer ? "right-ans" : i === a.choice ? "wrong-ans" : "") : "";
       return `<button class="btn left ${cls}" data-c="${i}" ${done ? "disabled" : ""}>${esc(o)}</button>`;
     }).join("")}</div>
-    ${done ? `${verdict(correctOf("r6", Q, a))}${nextBtn("r6")}` : ""}`;
+    ${done ? `${verdict(correctOf("r6", Q, a), a.timeout ? "Time ran out." : "")}${nextBtn("r6")}` : ""}`;
+  if (!done) card.querySelector(".prompt").insertAdjacentHTML("beforebegin", clockHtml("r6", LIMITS.r6, () => { answerOnce("r6", { pick, choice: null, timeout: true }); ui.chPick = null; }));
   if (!done) card.querySelectorAll("[data-c]").forEach(b => b.onclick = () => { answerOnce("r6", { pick, choice: Number(b.dataset.c) }); ui.chPick = null; });
   wireNext();
 }
@@ -729,8 +784,8 @@ function rFB(card, Q, a, R) {
   const parts = q.text.split("___");
   card.innerHTML = `<span class="type-tag">Round 7 · ${R.label}</span>
     <p class="prompt">${esc(parts[0])}<span style="color:var(--bulb)">${done ? esc(q.answer) : "______"}</span>${esc(parts[1] || "")}</p>
-    ${done ? `${verdict(a.correct, a.correct ? "" : `You said ${a.text || "nothing"}`)}${nextBtn("r7")}`
-      : `<form class="row" id="fbForm"><input class="input" id="fbIn" list="teamList" autocomplete="off" placeholder="Name the team" required><button class="btn primary" type="submit">Lock it in</button></form>
+    ${done ? `${verdict(a.correct, a.correct ? "" : a.timeout ? "Time ran out." : `You said ${a.text || "nothing"}`)}${nextBtn("r7")}`
+      : `${clockHtml("r7", LIMITS.r7, () => { const v = document.getElementById("fbIn")?.value.trim() || ""; answerOnce("r7", v ? { text: v, correct: teamMatch(v, q) } : { text: "", correct: false, timeout: true }); })}<form class="row" id="fbForm"><input class="input" id="fbIn" list="teamList" autocomplete="off" placeholder="Name the team" required><button class="btn primary" type="submit">Lock it in</button></form>
          <p class="sub">One shot. Start typing and pick from the list if it helps.</p>`}`;
   const f = document.getElementById("fbForm");
   if (f) f.onsubmit = e => { e.preventDefault(); const v = document.getElementById("fbIn").value.trim(); if (!v) return; answerOnce("r7", { text: v, correct: teamMatch(v, q) }); };
@@ -740,11 +795,12 @@ function rFB(card, Q, a, R) {
 // ---------- results + overtime ----------
 function describe(r, Q, a) {
   if (!a) return "–";
+  if (a.timeout && r !== "r5") return "Time's up";
   switch (r) {
     case "r1": return a.choice === "higher" ? "Higher" : "Lower";
     case "r2": return a.choice === "over" ? "Over" : "Under";
     case "r3": return a.choice ? "Real" : "Fake";
-    case "r4": return fmt(a.guess);
+    case "r4": return a.guess == null ? "Time's up" : fmt(a.guess);
     case "r5": return a.clues != null ? `Clue ${a.clues}` : "Missed";
     case "r6": return Q.r6[a.pick]?.category + ": " + (Q.r6[a.pick]?.options[a.choice] ?? "");
     case "r7": return a.text || "–";
@@ -828,6 +884,7 @@ function renderOT(Q, mine, opp, oppId, oppName, t) {
       <p class="prompt">${esc(oppName)} picked a player for you.</p>
       <ol class="clues">${target.clues.slice(0, shown).map((c, i) => `<li><span><span class="k">${keys[i]}</span>${esc(c)}</span></li>`).join("")}</ol>
       ${(res.guesses || []).length ? `<div class="misses">${res.guesses.map(g => `<span>${esc(g)}</span>`).join("")}</div>` : ""}
+      ${clockHtml("ot" + k + "c" + (res.guesses || []).length, LIMITS.ot, () => otGuess(Q, mine, opp, k, true))}
       <form class="row" id="otForm"><input class="input" id="otIn" list="playerList" autocomplete="off" placeholder="Player name" required><button class="btn primary" type="submit">Guess</button></form></section>`;
   } else if (myOT.sent && !thOT.sent) {
     html += `<section class="card flat"><p class="muted">Your pick is in. Waiting for ${esc(oppName)} to choose a player for you.</p></section>`;
@@ -843,24 +900,25 @@ function wireOT(Q, mine, opp, oppId) {
   const k = opp && finished(mine) && finished(opp) ? overtime(Q, iAmA ? mine : opp, iAmA ? opp : mine).round : null;
   $app.querySelectorAll("[data-send]").forEach(b => b.onclick = () => guarded(() => saveOT(k, { sent: b.dataset.send })));
   const f = document.getElementById("otForm");
-  if (f) f.onsubmit = e => {
-    e.preventDefault();
-    const v = document.getElementById("otIn").value.trim(); if (!v) return;
-    const target = BANK.players.find(p => p.id === opp.ot[k].sent);
-    const prev = mine.ot?.[k]?.result?.guesses || [];
-    const right = [target.name, ...(target.aliases || [])].some(x => norm(x) === norm(v));
-    const g = right ? prev : prev.concat(v);
-    const used = prev.length + 1;
-    const done = right || used >= target.clues.length;
-    guarded(() => saveOT(k, { result: { guesses: g, done, clues: right ? used : null } }));
-  };
+  if (f) f.onsubmit = e => { e.preventDefault(); otGuess(Q, mine, opp, k, false); };
+}
+function otGuess(Q, mine, opp, k, expired) {
+  let v = document.getElementById("otIn")?.value.trim() || "";
+  if (!v) { if (!expired) return; v = "Time's up"; }
+  const target = BANK.players.find(p => p.id === opp.ot[k].sent);
+  const prev = mine.ot?.[k]?.result?.guesses || [];
+  const right = !expired || v !== "Time's up" ? [target.name, ...(target.aliases || [])].some(x => norm(x) === norm(v)) : false;
+  const g = right ? prev : prev.concat(v);
+  const used = prev.length + 1;
+  const done = right || used >= target.clues.length;
+  guarded(() => saveOT(k, { result: { guesses: g, done, clues: right ? used : null } }));
 }
 
 // ---------- boot ----------
 async function boot() {
   document.getElementById("teamList").innerHTML = TEAMS.map(t => `<option value="${esc(t)}">`).join("");
   try {
-    const res = await fetch("questions.json");
+    const res = await fetch("questions.json?v=" + BANK_V, { cache: "no-cache" });
     BANK = await res.json();
   } catch (e) {
     $app.innerHTML = `<div class="err">The question bank didn't load. Reload the page to try again.</div>`;
