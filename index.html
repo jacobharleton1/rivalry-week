@@ -208,8 +208,53 @@ a { color: var(--bulb); }
 .mu .now { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bulb); }
 .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--line); }
 .dot.on { background: var(--away); border-color: var(--away); }
+
+/* The March: vertical field. --s = px per yard; yard y sits (110 - y) * --s from the top (opp end zone on top). */
+.col-field { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.field { position: relative; overflow: hidden; border-radius: 10px; border: 2px solid #26332b; height: 210px; background: #0f3a22; box-shadow: inset 0 0 40px rgba(0,0,0,.45); }
+.field.fit { height: 340px; }
+.field.fit .turf { --s: calc(340px / 120); }
+.turf { --s: 9px; position: absolute; left: 0; right: 0; top: 0; height: calc(120 * var(--s));
+  background: repeating-linear-gradient(180deg, #14532d 0 calc(10 * var(--s)), #166534 calc(10 * var(--s)) calc(20 * var(--s)));
+  transition: transform .9s cubic-bezier(.2,.8,.2,1); will-change: transform; }
+.ez { position: absolute; left: 0; right: 0; height: calc(10 * var(--s)); display: grid; place-items: center;
+  font-family: var(--display); color: rgba(236,230,211,.75); letter-spacing: .2em; font-size: clamp(11px, calc(3.2 * var(--s)), 22px); overflow: hidden; }
+.ez.top { top: 0; background: repeating-linear-gradient(135deg, #7a1f2b 0 10px, #6a1a25 10px 20px); }
+.ez.bot { bottom: 0; background: #0b2e1b; color: var(--home); }
+.yl { position: absolute; left: 6%; right: 6%; height: 2px; background: rgba(255,255,255,.55); top: calc((110 - var(--y)) * var(--s)); }
+.yl.half { background: rgba(255,255,255,.22); height: 1px; }
+.num { position: absolute; left: 9%; font-family: var(--digits); font-weight: 800; color: rgba(255,255,255,.55); font-size: clamp(9px, calc(2.6 * var(--s)), 20px);
+  top: calc((110 - var(--y)) * var(--s)); transform: translateY(-50%) rotate(-90deg); }
+.num.r { left: auto; right: 9%; transform: translateY(-50%) rotate(90deg); }
+.los { position: absolute; left: 6%; right: 6%; height: 3px; background: #3b82f6; top: calc((110 - var(--y)) * var(--s)); box-shadow: 0 0 8px #3b82f6; }
+.ltg { position: absolute; left: 6%; right: 6%; height: 3px; background: var(--bulb); top: calc((110 - var(--y)) * var(--s)); box-shadow: 0 0 8px var(--bulb); }
+.ball { position: absolute; left: 50%; width: 22px; height: 14px; margin: -7px 0 0 -11px; border-radius: 50%; top: calc((110 - var(--y)) * var(--s));
+  background: radial-gradient(ellipse at 40% 35%, #b4683a, #6b3416 70%); border: 1px solid #3b1a08; box-shadow: 0 2px 6px rgba(0,0,0,.6), 0 0 0 3px rgba(255,201,74,.35);
+  transition: top .9s cubic-bezier(.2,.8,.2,1); z-index: 3; }
+.ball::after { content: ""; position: absolute; left: 6px; right: 6px; top: 6px; height: 1px; background: #fff; opacity: .8; }
+.two .ball.home { left: 38%; } .two .ball.away { left: 62%; box-shadow: 0 2px 6px rgba(0,0,0,.6), 0 0 0 3px rgba(91,163,255,.45); }
+.seg { position: absolute; left: calc(50% - 2px); width: 4px; border-radius: 2px; z-index: 2;
+  top: calc((110 - var(--b)) * var(--s)); height: calc((var(--b) - var(--a)) * var(--s)); }
+.two .seg.home { left: calc(38% - 2px); } .two .seg.away { left: calc(62% - 2px); }
+.seg.gain.home { background: var(--bulb); } .seg.gain.away { background: var(--away); } .seg.flag { background: var(--bad); }
+.chip { --k: 0; position: absolute; z-index: 4; top: calc((110 - var(--y)) * var(--s) + var(--k) * 17px); transform: translateY(-50%); left: calc(50% + 16px);
+  font-size: 10px; font-weight: 800; letter-spacing: .06em; padding: 2px 6px; border-radius: 4px; white-space: nowrap; background: rgba(5,8,6,.85); color: var(--chalk); }
+.two .chip.home { left: auto; right: calc(62% + 14px); } .two .chip.away { left: calc(62% + 14px); }
+.chip.gain { color: var(--good); } .chip.flag { color: var(--bad); } .chip.inc, .chip.nogain, .chip.stopped { color: var(--chalk-dim); }
+.chip.review { color: #1a1406; background: var(--bulb); }
+.field.fit .chip { font-size: 9px; padding: 1px 4px; top: calc((110 - var(--y)) * var(--s) + var(--k) * 14px); }
+.field-cap { font-size: 13px; color: var(--chalk-dim); line-height: 1.5; }
+.field-cap b { color: var(--chalk); font-family: var(--digits); font-size: 16px; letter-spacing: .04em; }
+.field-cap .rev { color: var(--bulb); } .field-cap .away-t { color: var(--away); }
 @media (min-width: 960px) {
-  .wrap { max-width: 1120px; }
+  .cols.three { grid-template-columns: 260px minmax(0, 1fr) 320px; }
+  .col-field { position: sticky; top: 20px; }
+  .field, .field.fit { height: min(560px, 70vh); }
+  .field.fit .turf { --s: calc(min(560px, 70vh) / 120); }
+}
+@media (prefers-reduced-motion: reduce) { .turf, .ball { transition: none !important; } }
+@media (min-width: 960px) {
+  .wrap { max-width: 1180px; }
   .masthead h1 { font-size: 40px; }
   .cols { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: start; }
   .col-side { position: sticky; top: 20px; }
@@ -596,15 +641,105 @@ function renderGame() {
   if (idx === -1) return renderResults(Q, mine, opp, oppId, sharePanel);
 
   const R = ROUNDS[idx];
-  $app.innerHTML = `${scoreboard(Q, mine, opp, idx, R.label)}${drive(idx)}
-    ${cols(`<section class="card" id="roundCard"></section>
+  const myMarch = marchOf(Q, mine, opp), oppName = oppId ? (game.names?.[oppId] || "Opponent") : null;
+  $app.innerHTML = `${scoreboard(Q, mine, opp, idx, R.label)}
+    ${cols3(`${fieldHtml(myMarch, null, { nextGain: GAIN[ROUNDS[myMarch.plays.length]?.key], meName: game.names?.[uid] })}${fieldCaption(myMarch, null, oppName)}`,
+    `<section class="card" id="roundCard"></section>
     ${ui.error ? `<div class="err">${esc(ui.error)}</div>` : ""}`,
     `${sharePanel}${matchup(Q, mine, opp, oppId, idx)}`)}`;
+  settleField();
   wireShare();
   const card = document.getElementById("roundCard");
   ({ r1: rHL, r2: rOU, r3: rRF, r4: rCN, r5: rWY, r6: rCH, r7: rFB })[R.key](card, Q, mine.answers?.[R.key], R);
 }
 
+
+// ---------- The March: each round is a play on a vertical field ----------
+// Scoring is unchanged (1 point per round). The drive only shows it: a right answer gains yards, a miss is
+// incomplete, running out the clock is a delay-of-game flag. Head-to-head rounds (r4, r5) stay "under review"
+// until the opponent has played them, then resolve and the ball moves.
+const GAIN = { r1: 11, r2: 11, r3: 11, r4: 10, r5: 10, r6: 11, r7: 11 };   // all seven = 75 yards from the 25
+const H2H = new Set(["r4", "r5"]);
+const START = 25;
+function marchOf(Q, play, other) {
+  let pos = START; const plays = [];
+  for (const R of ROUNDS) {
+    const a = play?.answers?.[R.key];
+    if (!isDone(R.key, a)) break;
+    const from = pos; let kind, yards = 0;
+    if (H2H.has(R.key)) {
+      const p = roundPoints(R.key, Q, play, other);
+      if (p.me == null) kind = "review";
+      else if (p.me === 1) { kind = "gain"; yards = GAIN[R.key]; }
+      else kind = p.them === 1 ? "stopped" : "nogain";
+    } else if (correctOf(R.key, Q, a)) { kind = "gain"; yards = GAIN[R.key]; }
+    else if (a.timeout) { kind = "flag"; yards = -Math.min(5, pos - 1); }
+    else kind = "inc";
+    pos += yards;
+    plays.push({ r: R.key, label: R.label, kind, yards, from, to: pos });
+  }
+  const done = plays.length === 7, reviews = plays.filter(p => p.kind === "review").length;
+  const end = !done || reviews ? null : pos >= 100 ? "Touchdown" : pos >= 65 ? "Field goal range" : "Punt";
+  return { plays, pos, done, reviews, end };
+}
+const spot = y => y >= 100 ? "the end zone" : y === 50 ? "the 50" : y < 50 ? `own ${y}` : `opp ${100 - y}`;
+const chip = p => ({ gain: `+${p.yards}`, inc: "INC", flag: `FLAG ${p.yards}`, review: "REVIEW", stopped: "STOPPED", nogain: "NO GAIN" })[p.kind];
+let camLast = null;   // remembered camera/ball spots so redraws animate from where we were
+
+function fieldHtml(me, them, opts) {
+  // opts: { fit: show whole field, nextGain: yards to the line to gain, meName, themName }
+  const lane = (m, cls) => {
+    const segs = m.plays.map((p, i) => {
+      const k = m.plays.slice(0, i).filter(q => Math.abs(q.to - p.to) < 2.5).length;   // stack labels that land on the same spot
+      return `<div class="seg ${p.kind} ${cls}" style="--a:${Math.min(p.from, p.to)};--b:${Math.max(p.from, p.to)}"></div>
+      <span class="chip ${p.kind} ${cls}" style="--y:${p.to};--k:${k}">${i + 1}·${chip(p)}</span>`;
+    }).join("");
+    return `${segs}<div class="ball ${cls}" style="--y:${Math.min(m.pos, 100) + (m.pos >= 100 ? 4 : 0)}" data-ball="${cls}"></div>`;
+  };
+  const lines = [];
+  for (let y = 5; y < 100; y += 5) lines.push(`<i class="yl ${y % 10 ? "half" : ""}" style="--y:${y}"></i>`);
+  for (let y = 10; y < 100; y += 10) lines.push(`<b class="num" style="--y:${y}">${y > 50 ? 100 - y : y}</b><b class="num r" style="--y:${y}">${y > 50 ? 100 - y : y}</b>`);
+  const los = !opts.fit && !me.done ? `<i class="los" style="--y:${me.pos}"></i><i class="ltg" style="--y:${Math.min(100, me.pos + (opts.nextGain || 10))}"></i>` : "";
+  return `<div class="field ${opts.fit ? "fit" : "cam"} ${them ? "two" : ""}" aria-label="Your drive: ball on ${spot(me.pos)}">
+    <div class="turf">
+      <div class="ez top"><span>END ZONE</span></div><div class="ez bot"><span>${esc(opts.meName || "")}</span></div>
+      ${lines.join("")}${los}
+      ${them ? lane(them, "away") : ""}${lane(me, "home")}
+    </div>
+  </div>`;
+}
+function fieldCaption(me, them, themName) {
+  const next = me.plays.length;
+  const parts = [];
+  if (!me.done) parts.push(`<b>Play ${next + 1} of 7</b> · Ball on ${spot(me.pos)} · ${Math.max(0, 100 - me.pos)} to go`);
+  else parts.push(`<b>${me.end ? esc(me.end) : "Drive over"}</b> · Ball on ${spot(me.pos)}`);
+  if (me.reviews) parts.push(`<span class="rev">${me.reviews} play${me.reviews > 1 ? "s" : ""} under review until ${esc(themName || "your opponent")} plays ${me.reviews > 1 ? "them" : "it"}</span>`);
+  if (them) parts.push(`<span class="away-t">${esc(themName)}: ${them.end ? esc(them.end) : `ball on ${spot(them.pos)}`}</span>`);
+  return `<p class="field-cap">${parts.join("<br>")}</p>`;
+}
+// Position the camera on the ball and animate ball/camera moves between redraws.
+function settleField() {
+  const f = document.querySelector(".field"); if (!f) return;
+  const turf = f.querySelector(".turf"), ball = f.querySelector('[data-ball="home"]');
+  if (f.classList.contains("fit")) return;
+  const S = 9;
+  const y = Number(getComputedStyle(ball).getPropertyValue("--y")) || START;
+  const H = f.clientHeight, total = 120 * S, ballTop = (110 - y) * S;
+  const cam = Math.max(0, Math.min(total - H, ballTop - H * 0.62));
+  const key = game?.id;
+  if (camLast && camLast.key === key && (camLast.cam !== cam || camLast.y !== y)) {
+    turf.style.transition = "none"; ball.style.transition = "none";
+    turf.style.transform = `translateY(${-camLast.cam}px)`; ball.style.setProperty("--y", camLast.y);
+    turf.getBoundingClientRect();
+    turf.style.transition = ""; ball.style.transition = "";
+    requestAnimationFrame(() => { turf.style.transform = `translateY(${-cam}px)`; ball.style.setProperty("--y", y); });
+  } else {   // no move: place the camera without animating
+    turf.style.transition = "none"; turf.style.transform = `translateY(${-cam}px)`;
+    turf.getBoundingClientRect(); turf.style.transition = "";
+  }
+  camLast = { key, cam, y };
+}
+function cols3(field, main, side) { return `<div class="cols three"><div class="col-field">${field}</div><div class="col-main">${main}</div><aside class="col-side">${side}</aside></div>`; }
 function cols(main, side) { return `<div class="cols"><div class="col-main">${main}</div><aside class="col-side">${side}</aside></div>`; }
 function oppStatus(opp, oppName) {
   if (!opp || nextRound(opp) === 0) return `${oppName} hasn't started yet`;
@@ -836,8 +971,10 @@ function renderResults(Q, mine, opp, oppId, sharePanel) {
       <td class="p away-c">${theyDid ? (p.them ?? "–") : oppId ? "…" : "?"}<span class="ans">${theyDid ? esc(describe(R.key, Q, opp.answers?.[R.key])) : oppId ? "Not yet" : ""}</span></td></tr>`;
   }).join("");
 
+  const myMarch = marchOf(Q, mine, opp), theirMarch = both ? marchOf(Q, opp, mine) : null;
+  const fieldCol = `${fieldHtml(myMarch, theirMarch, { fit: true, meName: game.names?.[uid] })}${fieldCaption(myMarch, theirMarch, oppName)}`;
   $app.innerHTML = `${scoreboard(Q, mine, opp, -1, both && t.me === t.them ? "Overtime" : oppId && !both ? "In progress" : "Final")}
-    ${cols(`<section class="card">${headline}</section>
+    ${cols3(fieldCol, `<section class="card">${headline}</section>
     ${otHtml}
     ${ui.error ? `<div class="err">${esc(ui.error)}</div>` : ""}
     <section class="card">
@@ -849,6 +986,7 @@ function renderResults(Q, mine, opp, oppId, sharePanel) {
       ${oppId && both ? `<button class="btn primary big" id="rematchBtn" style="flex:1 1 200px" ${ui.busy ? "disabled" : ""}>Rematch ${esc(oppName)}</button>` : ""}
       <button class="btn" id="homeBtn" style="flex:1 1 200px">All games</button>
     </div>${formatList()}`)}`;
+  settleField();
   wireShare();
   document.getElementById("homeBtn").onclick = () => go("");
   const rm = document.getElementById("rematchBtn");
